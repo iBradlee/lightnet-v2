@@ -16,26 +16,30 @@ import javax.imageio.ImageIO;
 public class SpriteSheet {
     
     private String path;
-    public final int SIZE;
+//    public int SIZE;
+    public final int WIDTH, HEIGHT;
     public int[] pixels;
     
-    public static SpriteSheet tiles = new SpriteSheet("/textures/spritesheets/spritesheet.png", 256);
-    public static SpriteSheet spawn_level = new SpriteSheet("/textures/spritesheets/spawn_level.png", 96);
+    public static final SpriteSheet tiles = new SpriteSheet("/spritesheets/spritesheet.png", 256, 256);
+    public static final SpriteSheet spawn_level = new SpriteSheet("/spritesheets/spawn_level.png", 96, 96);
     
-    public SpriteSheet (String path, int size) {
+    public static final SpriteSheet characters = new SpriteSheet("/spritesheets/beltshake2.png", 192, 96);
+    
+    
+    public SpriteSheet(String path, int width, int height)
+    {
         this.path = path;
-        SIZE = size;
-        pixels = new int[SIZE * SIZE];
+        this.WIDTH = width;
+        this.HEIGHT = height;
+        pixels = new int[width * height];
         load();
+        
     }
     
     private void load() {
         try {
         BufferedImage image = ImageIO.read(SpriteSheet.class.getResource(path));
-        int w = image.getWidth();
-        int h = image.getHeight();
-        image.getRGB(0, 0, w, h, pixels, 0, w);
-        
+        image.getRGB(0, 0, WIDTH, HEIGHT, pixels, 0, WIDTH);
         } catch (IOException e) {
             e.printStackTrace();
         }

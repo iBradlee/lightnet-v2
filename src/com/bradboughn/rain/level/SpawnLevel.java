@@ -15,32 +15,39 @@ import javax.imageio.ImageIO;
  *
  * @author Brad
  */
-public class SpawnLevel extends Level {
+public class SpawnLevel extends Level 
+{
     
     
     
     
-    public SpawnLevel(String path) {
+    public SpawnLevel(String path) 
+    {
         super(path);
     }
     
-    protected void loadLevel(String path){
-    try {
-        BufferedImage image = ImageIO.read(SpawnLevel.class.getResource(path));
-        int h = height = image.getHeight();
-        int w = width = image.getWidth();
-        tiles = new int[w*h];
-        image.getRGB(0, 0, w, h, tiles, 0, w);
-    }   catch (IOException e) {
-        e.printStackTrace();
-        System.out.println("Exception! Could not load level file!");
+    protected void loadLevel(String path)
+    {
+        try 
+        {
+            BufferedImage image = ImageIO.read(SpawnLevel.class.getResource(path));
+            int h = height = image.getHeight();
+            int w = width = image.getWidth();
+            tiles = new int[w*h];
+            image.getRGB(0, 0, w, h, tiles, 0, w);
+        }   
+        catch (IOException e) 
+        {
+            e.printStackTrace();
+            System.out.println("Exception! Could not load level file!");
         } 
     }
     
     //Grass = 0x00FF00    
     //Flower = 0xFFFF00
     //Rock = 0x7F7F00
-    protected void generateLevel() {
+    protected void generateLevel()  
+    {
         
         
         

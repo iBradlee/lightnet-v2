@@ -5,7 +5,6 @@
  */
 package com.bradboughn.rain.level.tile.spawn_level;
 
-import com.bradboughn.rain.graphics.Screen;
 import com.bradboughn.rain.graphics.Sprite;
 import com.bradboughn.rain.level.tile.Tile;
 
@@ -13,10 +12,17 @@ import com.bradboughn.rain.level.tile.Tile;
  *
  * @author Brad
  */
-public class SpawnGrassTile extends Tile {
+public class SpawnGrassTile extends Tile
+{
     
-    public SpawnGrassTile(Sprite sprite) {
+    public SpawnGrassTile(Sprite sprite) 
+    {
         super(sprite);
+    }
+    
+    public SpawnGrassTile()
+    {
+        sprite = Sprite.spawn_grass;
     }
     
 

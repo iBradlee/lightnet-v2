@@ -12,17 +12,26 @@ import com.bradboughn.rain.level.tile.Tile;
  *
  * @author Brad
  */
-public class SpawnHedgeTile extends Tile{
+public class SpawnHedgeTile extends Tile
+{
     
-    public SpawnHedgeTile(Sprite sprite) {
+    public SpawnHedgeTile(Sprite sprite) 
+    {
         super(sprite);
     }
     
-    public boolean solid(){
+    public SpawnHedgeTile()
+    {
+        sprite = Sprite.spawn_hedge;
+    }
+    
+    public boolean solid()
+    {
         return true; 
     }
     
-    public boolean breakable(){
+    public boolean breakable()
+    {
         return true;
     }
     

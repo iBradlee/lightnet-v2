@@ -12,13 +12,21 @@ import com.bradboughn.rain.level.tile.Tile;
  *
  * @author Brad
  */
-public class SpawnStoneWallTile extends Tile {
+public class SpawnStoneWallTile extends Tile 
+{
     
-    public SpawnStoneWallTile(Sprite sprite) {
+    public SpawnStoneWallTile(Sprite sprite) 
+    {
         super(sprite);
     }
     
-    public boolean solid() {
+    public SpawnStoneWallTile()
+    {
+        sprite = Sprite.spawn_stoneWall;
+    }
+    
+    public boolean solid() 
+    {
         return true;
     }
 }

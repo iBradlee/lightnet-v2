@@ -18,5 +18,10 @@ public class WaterTile extends Tile {
         super(sprite);
     }
     
+    public WaterTile()
+    {
+        sprite = Sprite.water;
+    }
+    
 
 }

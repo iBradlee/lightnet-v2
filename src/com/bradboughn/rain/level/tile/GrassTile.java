@@ -19,5 +19,10 @@ public class GrassTile extends Tile {
         super(sprite);
     }
     
+    public GrassTile()
+    {
+        sprite = Sprite.grass;
+    }
+    
 
 }

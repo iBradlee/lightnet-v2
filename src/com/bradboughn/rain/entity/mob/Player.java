@@ -20,17 +20,20 @@ public class Player extends Mob{
     private int anim = 0;
     private boolean walking = false;
     
-    public Player (Keyboard input) {
+    public Player (Keyboard input) 
+    {
         this.input = input;
     }
     
-    public Player (int x, int y, Keyboard input) {
+    public Player (int x, int y, Keyboard input) 
+    {
         this.x = x;
         this.y = y;
         this.input = input;
     }
     
-    public void update() {
+    public void update() 
+    {
        int xa = 0, ya = 0;
        if (anim < 7500) anim++; 
        else anim = 0;
@@ -46,10 +49,19 @@ public class Player extends Mob{
        }
     }
     
-    public void render(Screen screen) {
-        if (dir == 0) {
+    public void render(Screen screen)
+    {
+        updateAnimation();
+        screen.renderPlayer(x - 32, y - 32, sprite);
+    }
+    
+    public void updateAnimation()
+    {
+        if (dir == 0) 
+        {
             sprite = Sprite.playerU;
-            if (walking) {
+            if (walking) 
+            {
                 if (anim % 30 < 10)
                     sprite = Sprite.playerU1;
                 else if (anim % 30 >= 10 && anim % 30 <20)
@@ -57,9 +69,11 @@ public class Player extends Mob{
                 else sprite = Sprite.playerU2;
             }
         }
-        if (dir == 1) {
+        if (dir == 1) 
+        {
             sprite = Sprite.playerR;
-            if (walking) {
+            if (walking) 
+            {
                 if (anim % 30 < 10)
                     sprite = Sprite.playerR1;
                 else if (anim % 30 >= 10 && anim % 30 <20)
@@ -67,9 +81,11 @@ public class Player extends Mob{
                 else sprite = Sprite.playerR2;
             }
         }
-        if (dir == 2) {
+        if (dir == 2) 
+        {
             sprite = Sprite.playerD;
-            if (walking) {
+            if (walking) 
+            {
                 if (anim % 30 < 10)
                     sprite = Sprite.playerD1;
                 else if (anim % 30 >= 10 && anim % 30 < 20)
@@ -77,9 +93,11 @@ public class Player extends Mob{
                 else sprite = Sprite.playerD2;
             }
         }
-        if (dir == 3) {
+        if (dir == 3) 
+        {
             sprite = Sprite.playerL;
-            if (walking) {
+            if (walking) 
+            {
                 if (anim % 30 < 10)
                     sprite = Sprite.playerL1;
                 else if (anim % 30 >= 10 && anim % 30 < 20)
@@ -88,8 +106,6 @@ public class Player extends Mob{
             }
             
         }
-        
-        screen.renderPlayer(x - 32, y - 32, sprite);
     }
     
     

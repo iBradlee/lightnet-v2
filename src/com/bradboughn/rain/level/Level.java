@@ -14,9 +14,10 @@ public class Level {
     protected int tilesInt[];
     protected int[] tiles;
     
-    public static Level spawn = new SpawnLevel ("/textures/levels/spawn_level.png");
+    public static Level spawn = new SpawnLevel ("/levels/spawn_level.png");
     
-    public Level(int width, int height){
+    public Level(int width, int height)
+    {
         this.width = width;
         this.height = height;
         tilesInt = new int[width * height];
@@ -24,40 +25,47 @@ public class Level {
         
     }
     
-    public Level(String path){
+    public Level(String path)
+    {
         loadLevel(path);
         generateLevel();
     }
     
-    protected void generateLevel(){
+    protected void generateLevel()
+    {
         
     }
     
-    protected void loadLevel(String path){
+    protected void loadLevel(String path)
+    {
         
     }
     
-    public void update(){
+    public void update()
+    {
         
     }
     
-    private void time() {
+    private void time() 
+    {
         
     }
     //Render method is finding all 4 sides, and the current position on the map, of the screen, then renders each tile individually
-    public void render(int xScroll,int yScroll, Screen screen){      //Method takes xScroll, yScroll, and tells where to render
+    public void render(int xScroll,int yScroll, Screen screen)
+    {      
         screen.setOffset(xScroll, yScroll);                          //setting/updating offset for player movement
         int x0 = xScroll >> 4; // left side                          >>4, is same as divided by 16. This has it check/render every tile, instead of pixels.
         int x1 = (xScroll + screen.width + 16) >> 4; // right side        >>4 puts numbers in tile precision
         int y0 = yScroll >> 4;//top side            
         int y1 = (yScroll + screen.height + 16) >> 4; // bottom side || +16 adds another tile to fully cover screen.
         
-        for (int y = y0; y < y1; y++) {
-            for (int x = x0; x < x1; x++) {
+        for (int y = y0; y < y1; y++) 
+        {
+            for (int x = x0; x < x1; x++) 
+            {
                
                 Tile.voidTile.render(x, y, screen);
-                   
-                
+
                 getTile(x,y).render(x, y, screen);
                 // x and y grab every tile on screen currently, by taking the x0, y0 variable
             }    
@@ -76,7 +84,8 @@ public class Level {
     //Dark grass = 2C5E00
     //Spawn point = 00FFFF
     
-    public Tile getTile (int x, int y) {
+    public Tile getTile (int x, int y) 
+    {
         if (x < 0 || y < 0 || x >= width || y >= height) return Tile.spawn_water;
         if (tiles[x + y * width] == Tile.col_spawn_grass) return Tile.spawn_grass;
         if (tiles[x + y * width] == Tile.col_grass_flower) return Tile.grassFlower;

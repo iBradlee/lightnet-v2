@@ -18,5 +18,10 @@ public class VoidTile extends Tile {
         super(sprite);
     }
     
+    public VoidTile()
+    {
+        sprite = Sprite.voidSprite;
+    }
+    
 
 }

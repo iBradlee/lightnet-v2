@@ -17,26 +17,27 @@ import com.bradboughn.rain.level.tile.spawn_level.SpawnWoodFloorTile;
  *
  * @author Brad
  */
-public class Tile {
+public class Tile 
+{
     
     public int x, y;
     public Sprite sprite;
     
     //Basic FIRST Tiles
-    public static Tile grass = new GrassTile(Sprite.grass);
-    public static Tile grassFlower = new FlowerTile(Sprite.grassFlower);
-    public static Tile grassRock = new RockTile(Sprite.grassRock);
-    public static Tile water = new WaterTile(Sprite.water);
-        public static Tile voidTile = new VoidTile(Sprite.voidSprite);
+    public static Tile grass = new GrassTile();
+    public static Tile grassFlower = new FlowerTile();
+    public static Tile grassRock = new RockTile();
+    public static Tile water = new WaterTile();
+    public static Tile voidTile = new VoidTile();
     
     //Spawn Level Tiles:
-    public static Tile spawn_grassBasic = new GrassTile(Sprite.grass);
-    public static Tile spawn_grass = new SpawnGrassTile(Sprite.spawn_grass);
-    public static Tile spawn_hedge = new SpawnHedgeTile(Sprite.spawn_hedge);
-    public static Tile spawn_stoneWall = new SpawnStoneWallTile(Sprite.spawn_stoneWall);
+    public static Tile spawn_grassBasic = new GrassTile();
+    public static Tile spawn_grass = new SpawnGrassTile();
+    public static Tile spawn_hedge = new SpawnHedgeTile();
+    public static Tile spawn_stoneWall = new SpawnStoneWallTile();
     public static Tile spawn_stoneWall2 = new SpawnStoneWallTile(Sprite.spawn_stoneWall2);
-    public static Tile spawn_woodFloor = new SpawnWoodFloorTile(Sprite.spawn_woodFloor);
-    public static Tile spawn_water = new SpawnWaterTile(Sprite.spawn_water);
+    public static Tile spawn_woodFloor = new SpawnWoodFloorTile();
+    public static Tile spawn_water = new SpawnWaterTile();
     
     public static final int col_grass_flower = 0xfffe0000;
     
@@ -51,19 +52,28 @@ public class Tile {
     
 
     
-    public Tile(Sprite sprite) {
+    public Tile(Sprite sprite)
+    {
         this.sprite = sprite;
     }
     
-    public void render(int x, int y, Screen screen) {
+    public Tile()
+    {
+        
+    }
+    
+    public void render(int x, int y, Screen screen) 
+    {
         screen.renderTile(x << 4 ,y << 4 , this);
     }
     
-    public boolean solid() {
+    public boolean solid() 
+    {
         return false;
     }
     
-    public boolean breakable() {
+    public boolean breakable() 
+    {
         return false;
     }
 }

@@ -12,10 +12,17 @@ import com.bradboughn.rain.level.tile.Tile;
  *
  * @author Brad
  */
-public class SpawnWaterTile extends Tile {
+public class SpawnWaterTile extends Tile 
+{
     
-    public SpawnWaterTile(Sprite sprite) {
+    public SpawnWaterTile(Sprite sprite) 
+    {
         super(sprite);
+    }
+    
+    public SpawnWaterTile()
+    {
+        sprite = Sprite.spawn_water;
     }
     
 }

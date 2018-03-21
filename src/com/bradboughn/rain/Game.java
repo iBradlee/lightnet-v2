@@ -17,16 +17,17 @@ import java.awt.image.DataBufferInt;
 import javax.swing.JFrame;
 
 
-public class Game extends Canvas implements Runnable {
+public class Game implements Runnable {
     private static final long serialVersionUID = 1L;
 
-    public static int width = 300;
+    public static int width = 500;
     public static int height = width/ 16 * 9;
     public static int scale = 3;
     public static String title = "Rain";
     
     private Thread thread;
     private JFrame frame;
+    private Canvas canvas;
     private Keyboard key;
     private Level level;
     private Player player;
@@ -38,9 +39,9 @@ public class Game extends Canvas implements Runnable {
     private int[] pixels = ((DataBufferInt)image.getRaster().getDataBuffer()).getData(); // Converting BufferedImage to int, for ability to store Buffer in 1D array
     
     public Game() {
+        canvas = new Canvas();        
         Dimension size = new Dimension(width * scale, height * scale);
-        setPreferredSize(size);
-        
+        canvas.setPreferredSize(size);
         screen = new Screen(width, height);
         frame = new JFrame(); 
         key = new Keyboard();
@@ -49,6 +50,7 @@ public class Game extends Canvas implements Runnable {
         player = new Player(playerSpawn.getX(),playerSpawn.getY(), key);
         player.init(level);
         
+        canvas.addKeyListener(key);
         frame.addKeyListener(key);
     }
     
@@ -107,9 +109,9 @@ public class Game extends Canvas implements Runnable {
     }
     
     public void render(){
-        BufferStrategy bs = getBufferStrategy();
+        BufferStrategy bs = canvas.getBufferStrategy();
         if (bs == null){ // Check if bs has been created
-            createBufferStrategy(3); // if not, bs is created
+            canvas.createBufferStrategy(3); // if not, bs is created
             return; // kicks out of if statement, assigns bs to what was created
         }
         screen.clear(); // clear objects from screen, so previous pixels of moving objects are destroyed
@@ -123,7 +125,7 @@ public class Game extends Canvas implements Runnable {
         }
         
         Graphics g = bs.getDrawGraphics();
-        g.drawImage(image, 0, 0, getWidth(), getHeight(), null);
+        g.drawImage(image, 0, 0, canvas.getWidth(), canvas.getHeight(), null);
         g.dispose();
         bs.show();
     }
@@ -133,12 +135,13 @@ public class Game extends Canvas implements Runnable {
         Game game = new Game();
         game.frame.setResizable(false); // setting up values for game window, using JFrame
         game.frame.setTitle("Rain");
-        game.frame.add(game);
+        game.frame.add(game.canvas);
         game.frame.pack();
         game.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         game.frame.setLocationRelativeTo(null);
         game.frame.setVisible(true);
         game.frame.setFocusable(true);
+
         
         game.start();
     }

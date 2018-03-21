@@ -12,10 +12,17 @@ import com.bradboughn.rain.level.tile.Tile;
  *
  * @author Brad
  */
-public class SpawnWoodFloorTile extends Tile {
+public class SpawnWoodFloorTile extends Tile 
+{
     
-    public SpawnWoodFloorTile(Sprite sprite) {
+    public SpawnWoodFloorTile(Sprite sprite) 
+    {
         super(sprite);
+    }
+    
+    public SpawnWoodFloorTile()
+    {
+        sprite = Sprite.spawn_woodFloor;
     }
     
 }
