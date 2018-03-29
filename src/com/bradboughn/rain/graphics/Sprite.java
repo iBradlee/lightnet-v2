@@ -9,7 +9,8 @@ package com.bradboughn.rain.graphics;
  *
  * @author Brad
  */
-public class Sprite {
+public class Sprite 
+{
     
     public final int SIZE;
     private int x, y;
@@ -50,7 +51,8 @@ public class Sprite {
     
     
     
-    public Sprite(int size, int x, int y, SpriteSheet sheet) {
+    public Sprite(int size, int x, int y, SpriteSheet sheet) 
+    {
         SIZE = size;
         pixels = new int[SIZE * SIZE];
         this.x = x * size;
@@ -59,21 +61,27 @@ public class Sprite {
         load();
     }
     
-    public Sprite(int size, int color) {
+    public Sprite(int size, int color) 
+    {
         SIZE = size;
         pixels = new int[SIZE * SIZE];
         setColor(color);
     }
     
-    public void setColor(int color) {
-        for (int i = 0; i < SIZE * SIZE; i++) {
+    public void setColor(int color) 
+    {
+        for (int i = 0; i < SIZE * SIZE; i++) 
+        {
             pixels[i] = color;
         }
     }
     
-    public void load(){
-        for (int y = 0; y < SIZE; y++){
-            for (int x = 0; x < SIZE; x++){
+    public void load()
+    {
+        for (int y = 0; y < SIZE; y++)
+        {
+            for (int x = 0; x < SIZE; x++)
+            {
                 pixels[x + y * SIZE] = sheet.pixels[(x + this.x) + (y + this.y) * sheet.WIDTH];
             }
         }

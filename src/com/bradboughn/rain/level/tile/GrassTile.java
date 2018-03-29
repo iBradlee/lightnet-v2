@@ -13,9 +13,11 @@ import com.bradboughn.rain.graphics.Sprite;
  *
  * @author Brad
  */
-public class GrassTile extends Tile {
+public class GrassTile extends Tile 
+{
     
-    public GrassTile(Sprite sprite) {
+    public GrassTile(Sprite sprite) 
+    {
         super(sprite);
     }
     

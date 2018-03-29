@@ -1,0 +1,3 @@
+COLLISION :
+Changing the "scale", in Game.class, to for example, 1, screws up collision. It seems like collision is off by somewhere around 1 tile
+I think on both the x and y axii. Probably pretty simple fix.

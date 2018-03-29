@@ -8,10 +8,11 @@ import com.bradboughn.rain.level.tile.Tile;
  *
  * @author Brad
  */
-public class Level {
+public class Level 
+{
     
     protected int width, height;
-    protected int tilesInt[];
+    protected int[] tilesInt;
     protected int[] tiles;
     
     public static Level spawn = new SpawnLevel ("/levels/spawn_level.png");
@@ -53,7 +54,7 @@ public class Level {
     //Render method is finding all 4 sides, and the current position on the map, of the screen, then renders each tile individually
     public void render(int xScroll,int yScroll, Screen screen)
     {      
-        screen.setOffset(xScroll, yScroll);                          //setting/updating offset for player movement
+        screen.setOffset(xScroll, yScroll);                          //setting/updating offset in our screen, based on player movement
         int x0 = xScroll >> 4; // left side                          >>4, is same as divided by 16. This has it check/render every tile, instead of pixels.
         int x1 = (xScroll + screen.width + 16) >> 4; // right side        >>4 puts numbers in tile precision
         int y0 = yScroll >> 4;//top side            
@@ -63,7 +64,6 @@ public class Level {
         {
             for (int x = x0; x < x1; x++) 
             {
-               
                 Tile.voidTile.render(x, y, screen);
 
                 getTile(x,y).render(x, y, screen);

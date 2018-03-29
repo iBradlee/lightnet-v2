@@ -12,9 +12,10 @@ import java.awt.event.KeyListener;
  *
  * @author Brad
  */
-public class Keyboard implements KeyListener {
-    
-    private final boolean[] keys = new boolean[120];
+public class Keyboard implements KeyListener 
+{
+    private static final byte NUM_KEYBOARD_KEYS = 120;
+    private final boolean[] keys = new boolean[NUM_KEYBOARD_KEYS];
     public boolean up, down, left, right;
    
     

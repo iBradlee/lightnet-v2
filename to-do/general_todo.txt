@@ -1,0 +1,23 @@
+In Sprite class:
+At the moment, a new Sprite takes the following parameters : {int SIZE, int x, int y, SpriteSheet sheet}
+This means a few things. Firstly, obviously a Sprite created in this class HAS to be a square. There
+can't be a Mob that uses a 16w x 32h Sprite. Secondly, the constructor assumes the Sprite to be loaded
+is a square, so to get the x and y coordinates, it takes the x and y arguments and multiplies them by
+the size (16,32,etc.). This means it does not count incrementally, one by one, when grabbing the Sprite
+but rather with this system, it treats one square block unit of "SIZE" as one whole tile. So having a
+32x32 Sprite, and putting in x=2, y=0, it will take x and multiply by SIZE, and y multiplied by SIZE.
+No matter if almost everything in the game is 16x16, including the actual .png SpriteSheet assets, with
+this dumb system you will calculate what x and y to give to the Sprite constructor by counting tiles in
+your .png using the "grid" that fits with the size of your Sprite. This was much too long of a note for
+such a fucking simple concept...
+ANYWAY, I just wanted to note that I wish to allow more "dynamically" sized/shaped game objects/sprites
+instead of treating every one as a square.
+
+For KeyListener:
+When holding a directional key, for example, and clicking outside the JFrame, or Canvas, the key will not
+register the release, no matter if you click back into the frame/canvas, or not. So you end up with
+lots of bugs, one notably is when your walking animation plays on loop even when a key is not being held.
+I'm thinking just looking into the docs, and seeing if there's a way to, when re-focusing on Jframe or
+canvas, have it first check all current status' for keys. This way, if key was held down, and mouse
+clicks outside the program window, then back in, it will automatically reset(??) all key status' (pressed/released)
+before listening for input again.

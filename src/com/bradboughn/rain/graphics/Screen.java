@@ -31,8 +31,7 @@ public class Screen
         pixels = new int[width * height];
         //for (int i = 0; i < (MAP_SIZE * MAP_SIZE); i++) {
             //tiles[i] = random.nextInt(0xffffff);
-            //tiles[0] = 0; 
-            
+            //tiles[0] = 0;  
         //}
     }
     
@@ -68,6 +67,23 @@ public class Screen
         xp -= xOffset;
         yp -= yOffset;
         
+        for (int y = 0; y < sprite.SIZE; y++) 
+        {
+            int ya = y + yp; 
+            for (int x = 0; x < sprite.SIZE; x++) 
+            {
+                int xa = x + xp; // Setting X absolute
+                if (xa < -sprite.SIZE || xa >= width || ya < 0 || ya >= height) break; // stops rendering when outside player size
+                if (xa < 0) xa = 0;
+                int col = sprite.pixels[x + y * sprite.SIZE];
+                if( col != 0x00FFFFFF) pixels[xa + ya * width] = col; // if pixel isn't colored transparent, it renders the player image.
+                                                                      // HEX Code is set to transparent.
+            }
+        }
+    }
+    
+    public void renderPlayerOnScreen (int xp, int yp, Sprite sprite)
+    {
         for (int y = 0; y < sprite.SIZE; y++) 
         {
             int ya = y + yp; 

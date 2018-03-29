@@ -13,7 +13,8 @@ import javax.imageio.ImageIO;
  *
  * @author Brad
  */
-public class SpriteSheet {
+public class SpriteSheet 
+{
     
     private String path;
 //    public int SIZE;
@@ -36,11 +37,15 @@ public class SpriteSheet {
         
     }
     
-    private void load() {
-        try {
+    private void load() 
+    {
+        try 
+        {
         BufferedImage image = ImageIO.read(SpriteSheet.class.getResource(path));
         image.getRGB(0, 0, WIDTH, HEIGHT, pixels, 0, WIDTH);
-        } catch (IOException e) {
+        }
+        catch (IOException e) 
+        {
             e.printStackTrace();
         }
     }
