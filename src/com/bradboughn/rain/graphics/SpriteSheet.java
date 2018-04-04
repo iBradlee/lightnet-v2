@@ -1,18 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.bradboughn.rain.graphics;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
-/**
- *
- * @author Brad
- */
 public class SpriteSheet 
 {
     
@@ -21,10 +13,11 @@ public class SpriteSheet
     public final int WIDTH, HEIGHT;
     public int[] pixels;
     
-    public static final SpriteSheet tiles = new SpriteSheet("/spritesheets/spritesheet.png", 256, 256);
-    public static final SpriteSheet spawn_level = new SpriteSheet("/spritesheets/spawn_level.png", 96, 96);
+    public static final SpriteSheet tiles = new SpriteSheet("/textures/spritesheets/spritesheet.png", 256, 256);
+    public static final SpriteSheet spawn_level = new SpriteSheet("/textures/spritesheets/spawn_level.png", 96, 96);
     
-    public static final SpriteSheet characters = new SpriteSheet("/spritesheets/beltshake2.png", 192, 96);
+    public static final SpriteSheet characters = new SpriteSheet("/textures/spritesheets/beltshake2.png", 192, 96);
+    public static final SpriteSheet projectiles = new SpriteSheet("/textures/spritesheets/projectiles/basic2.png", 48, 48);
     
     
     public SpriteSheet(String path, int width, int height)

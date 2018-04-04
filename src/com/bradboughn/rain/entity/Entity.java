@@ -1,18 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.bradboughn.rain.entity;
 
 import com.bradboughn.rain.graphics.Screen;
 import com.bradboughn.rain.level.Level;
 import java.util.Random;
 
-/**
- *
- * @author Brad
- */
 public abstract class Entity 
 {
     
@@ -46,5 +38,6 @@ public abstract class Entity
     public void init(Level level) 
     {
         this.level = level;
+        level.addEntity(this);
     }
 }

@@ -1,18 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.bradboughn.rain.graphics;
 
 import com.bradboughn.rain.entity.mob.Player;
 import com.bradboughn.rain.level.tile.Tile;
 import java.util.Random;
 
-/**
- *
- * @author Brad
- */
 public class Screen     
 {
     public int width, height;
@@ -44,25 +36,52 @@ public class Screen
     }
     
     
-    public void renderTile (int xp, int yp, Tile tile) // xp/yp = map location of tile to be rendered
+    public void renderTile (int xp, int yp, Sprite sprite) // xp/yp = map location of tile to be rendered
     {
         xp -= xOffset; // subtracting xOffset to XP, to move "map" in correct location
         yp -= yOffset;
-        for (int y = 0; y < tile.sprite.SIZE; y++) 
+        for (int y = 0; y < sprite.SIZE; y++) 
         {
             int ya = y + yp; // Setting Y absolute
-            for (int x = 0; x < tile.sprite.SIZE; x++) 
+            for (int x = 0; x < sprite.SIZE; x++) 
             {
+                int col = sprite.pixels[x + y * sprite.SIZE];
+                if (col == 0x00ffffff) continue;
                 int xa = x + xp; // Setting X absolute
-                if (xa < -tile.sprite.SIZE || xa >= width || ya < 0 || ya >= height) break; // stops rendering when outside screen/window size
+                if (xa < -sprite.SIZE || xa >= width || ya < 0 || ya >= height) break; // stops rendering when outside screen/window size
                 if (xa < 0) xa = 0;
                 
-                pixels[xa + ya * width] = tile.sprite.pixels[x + y * tile.sprite.SIZE];
+                pixels[xa + ya * width] = col;
             }
         }
     }
     
-    public void renderPlayer (int xp, int yp, Sprite sprite)
+    //renderTile w/ flip functionality
+    public void renderTile (int xp, int yp, Sprite sprite, int flip)
+    {
+        xp -= xOffset;
+        yp -= yOffset;
+        for (int y = 0; y < sprite.SIZE; y++) 
+        {
+            int ya = y + yp;
+            int ys = y;
+            if (flip == 2 || flip == 3) ys = sprite.SIZE - 1 - y; //counts backwards now
+            for (int x = 0; x < sprite.SIZE; x++) 
+            {
+                int xa = x + xp; 
+                int xs = x;
+                int col = sprite.pixels[x + y * sprite.SIZE];
+                if (col == 0x00ffffff)continue;
+                if (flip == 1 || flip == 3) xs = sprite.SIZE -1 - x;
+                if (xa < -sprite.SIZE || xa >= width || ya < 0 || ya >= height) break;
+                if (xa < 0) xa = 0;
+                
+                pixels[xa + ya * width] = col;
+            }
+        }
+    }
+    
+    public void renderEntity (int xp, int yp, Sprite sprite)
     {
         xp -= xOffset;
         yp -= yOffset;
@@ -72,12 +91,38 @@ public class Screen
             int ya = y + yp; 
             for (int x = 0; x < sprite.SIZE; x++) 
             {
+                int col = sprite.pixels[x + y * sprite.SIZE];
+                if( col == 0x00FFFFFF) continue;
                 int xa = x + xp; // Setting X absolute
                 if (xa < -sprite.SIZE || xa >= width || ya < 0 || ya >= height) break; // stops rendering when outside player size
                 if (xa < 0) xa = 0;
-                int col = sprite.pixels[x + y * sprite.SIZE];
-                if( col != 0x00FFFFFF) pixels[xa + ya * width] = col; // if pixel isn't colored transparent, it renders the player image.
+                pixels[xa + ya * width] = col; // if pixel isn't colored transparent, it renders the player image.
                                                                       // HEX Code is set to transparent.
+            }
+        }
+    }
+    //renderEntity w/ flip functionality
+    public void renderEntity (int xp, int yp, Sprite sprite, int flip)
+    {
+        xp -= xOffset;
+        yp -= yOffset;
+        
+        for (int y = 0; y < sprite.SIZE; y++) 
+        {
+            int ya = y + yp; 
+            int ys = y;
+            if (flip == 2 || flip == 3) ys = sprite.SIZE -1 - y;
+            for (int x = 0; x < sprite.SIZE; x++) 
+            {
+                int xa = x + xp; 
+                int xs = x;
+                if (flip == 1 || flip == 3) xs = sprite.SIZE - 1 - x;
+                int col = sprite.pixels[xs + ys * sprite.SIZE];
+                if( col == 0x00FFFFFF) continue;
+                if (xa < -sprite.SIZE || xa >= width || ya < 0 || ya >= height) break; 
+                if (xa < 0) xa = 0;
+                pixels[xa + ya * width] = col; 
+                                                       
             }
         }
     }

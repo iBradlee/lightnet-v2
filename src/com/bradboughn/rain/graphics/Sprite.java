@@ -1,14 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.bradboughn.rain.graphics;
 
-/**
- *
- * @author Brad
- */
 public class Sprite 
 {
     
@@ -49,6 +41,8 @@ public class Sprite
     public static Sprite playerL2 = new Sprite(32, 3, 7, SpriteSheet.tiles );
     public static Sprite playerR2 = new Sprite(32, 1, 7, SpriteSheet.tiles );
     
+    //Projectiles
+    public static Sprite basicProjectile = new Sprite(8, 0, 0, SpriteSheet.projectiles);
     
     
     public Sprite(int size, int x, int y, SpriteSheet sheet) 

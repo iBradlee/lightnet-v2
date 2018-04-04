@@ -39,7 +39,6 @@ public class SpawnLevel extends Level
         catch (IOException e) 
         {
             e.printStackTrace();
-            System.out.println("Exception! Could not load level file!");
         } 
     }
     

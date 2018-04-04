@@ -1,20 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.bradboughn.rain.entity.mob;
 
 import com.bradboughn.rain.Game;
+import com.bradboughn.rain.entity.projectile.Projectile;
+import com.bradboughn.rain.entity.projectile.WizardProjectile;
 import com.bradboughn.rain.graphics.Screen;
 import com.bradboughn.rain.graphics.Sprite;
 import com.bradboughn.rain.input.Keyboard;
 import com.bradboughn.rain.input.Mouse;
 
-/**
- *
- * @author Brad
- */
 public class Player extends Mob{
     
     private Keyboard key;
@@ -23,6 +17,10 @@ public class Player extends Mob{
     private int anim = 0;
     private boolean walking = false;
 
+    private int currentItemID;
+    private int fireRate = 0;
+
+    
     /*@todo 
     *   Need to create a static variable that handles the player's current coordinates/offset/whatever
     *   IN RELATION TO THE SCREEN/WINDOW, and not absolute map/level location. I want ONE variable that
@@ -49,10 +47,12 @@ public class Player extends Mob{
         this.x = x;
         this.y = y;
         this.key = key;
+        fireRate = WizardProjectile.FIRE_RATE;
     }
     
     public void update() 
     {
+        if (fireRate > 0) fireRate--;
         int xa = 0, ya = 0;
         if (anim < 7500) anim++; 
         else anim = 0;
@@ -66,27 +66,38 @@ public class Player extends Mob{
             walking = true;
         } else {
             walking = false;
-        }
+        }     
         
+        clearProjectiles();
         updateShooting();
+        updateProjectiles();
+        
     }
     
     public void render(Screen screen)
     {
         int xx = x - 16;
         int yy = y - 16;
+        renderProjectiles(screen);
         updateAnimation();
-        screen.renderPlayer(xx, yy, sprite);
+        screen.renderEntity(xx, yy, sprite);
     }
-    
+    /**
+     * Checks for correct input to shoot, at the start. Finds delta x, and delta y, between current
+     * player location, and mouse coordinates. Using both delta variables, it then uses the Math.atan2()
+     * function to calculate the slope of the angle between the player and mouse. After all this, it 
+     * will call Mob.shoot(int x, int y, double slope), and let this method handle the actual creating
+     * of the new Projectile object, as well as adding it to the Level and/or Mob ArrayLists for Projectiles.
+     */
     public void updateShooting()
     {
-        if (Mouse.isMouseL())
+        if (Mouse.isMouseL() && fireRate <=0)
         {
             double dx = Mouse.getX() - Game.getScreenWcenter();
             double dy = Mouse.getY() - Game.getScreenHcenter();
             double slope = Math.atan2(dy, dx);
             shoot(x, y, slope);
+            fireRate = WizardProjectile.FIRE_RATE;
         }
     }
     

@@ -116,9 +116,11 @@ public class Game implements Runnable
     
     public void update()
     { 
-    key.update();
-    Mouse.update();
-    player.update();
+        key.update();
+        Mouse.update();
+    //make sure entity (player) isn't updated 2x per tick, as it would be if this was uncommented
+//    player.update();
+        level.update();
     }
     
     public void render()
@@ -133,7 +135,7 @@ public class Game implements Runnable
         int xScroll = player.x - screen.width / 2; //code to center player on screen
         int yScroll = player.y - screen.height / 2;
         level.render(xScroll, yScroll, screen); // Render method from Level class, taking as parameters, xScroll and yScroll (x and y, from update method above, dictated by Keyboard class)
-        player.render(screen);
+//        player.render(screen);
 
         for (int i = 0; i < pixels.length; i++) 
         { // cycle thru all pixels in created window
@@ -142,7 +144,6 @@ public class Game implements Runnable
         
         Graphics g = bs.getDrawGraphics();
         g.drawImage(image, 0, 0, canvas.getWidth(), canvas.getHeight(), null);
-        g.fillRect(Mouse.getX(), Mouse.getY(), 64, 64);
         g.dispose();
         bs.show();
     }

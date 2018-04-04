@@ -1,24 +1,25 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.bradboughn.rain.entity.mob;
 
+import com.bradboughn.rain.Game;
 import com.bradboughn.rain.entity.Entity;
+import com.bradboughn.rain.entity.projectile.Projectile;
+import com.bradboughn.rain.entity.projectile.WizardProjectile;
+import com.bradboughn.rain.graphics.Screen;
 import com.bradboughn.rain.graphics.Sprite;
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- *
- * @author Brad
- */
 public abstract class Mob extends Entity 
 {
     
     protected Sprite sprite;
     protected int dir = 0;
+    protected double speed = 50;
 
     protected boolean moving = false;
+    
+    protected List<Projectile> projectiles = new ArrayList();
     
     public void move(int xa, int ya) 
     {
@@ -35,6 +36,10 @@ public abstract class Mob extends Entity
         
         if (!collision(xa, ya))
         {
+            if (ya == 0)
+            {
+                
+            }
         x += xa;
         y += ya;
         }
@@ -42,11 +47,16 @@ public abstract class Mob extends Entity
     
     public void update() 
     {
-        
+        updateProjectiles();
+    }
+    
+    public void render(Screen screen) 
+    {
+        renderProjectiles(screen);
     }
     
     //Finding four corners of tile for collision
-    private boolean collision(int xa, int ya) 
+    private boolean collision(int xa, int ya) //xa and ya are either 1, 0, or -1, depending on movement
     {
         boolean solid = false;
         for (int c = 0; c < 4; c++)
@@ -68,22 +78,46 @@ public abstract class Mob extends Entity
 //</editor-fold>
             int xTile = ((x + xa) + c % 2 * 14 - 7) / 16; 
             int yTile = ((y +ya) + c / 2 * 12 + 3) / 16;
-//
-//            System.out.println("actual xtile : " + x / 16 + "\nactual ytile : " + y /16+ "\n");
-//            System.out.println("c = " + c + "\nxTile : " + xTile + "\nyTile : " + yTile + "\n------------------------");
             if (level.getTile(xTile, yTile).solid()) solid = true;
         }
         return solid;
     }
     
-        
-    public void shoot(int x, int y, double direction)
+        //should be "addProjectiles()" I thinks
+    public void shoot(int x, int y, double slope)
     {
-        direction *= 180/Math.PI;
+        Projectile p = new WizardProjectile(x, y, slope);
+        
+//        projectiles.add(p);
+        level.addProjectile(p);
     }
     
-    public void render() 
+    public void updateProjectiles()
     {
-        
+        for (Projectile p : projectiles)
+        {
+            p.update();
+        }
     }
+    
+    public void renderProjectiles(Screen screen)
+    {
+        for (Projectile p : projectiles)
+        {
+            p.render(screen);
+        }
+    }
+    
+    public void clearProjectiles()
+    {
+//        for (int i = 0; i < projectiles.size(); i++)
+//        {
+//            if(projectiles.get(i).isRemoved())
+//            {
+//                projectiles.remove(i);
+//            }
+//        }
+        level.removeLvlProjectiles();
+    }
+    
 }

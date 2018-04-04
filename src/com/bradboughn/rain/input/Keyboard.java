@@ -18,7 +18,9 @@ public class Keyboard implements KeyListener
     private final boolean[] keys = new boolean[NUM_KEYBOARD_KEYS];
     public boolean up, down, left, right;
    
-    
+    //@todo
+    //Redesign Keyboard class with the assumption that we'll only have 1 static Keyboard instance, just
+    //as we did with Mouse.
     public void update()
     {
         up = keys[KeyEvent.VK_W] || keys[KeyEvent.VK_UP];

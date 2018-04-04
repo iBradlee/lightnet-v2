@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.bradboughn.rain.level.tile;
 
 import com.bradboughn.rain.graphics.Screen;
@@ -13,10 +9,6 @@ import com.bradboughn.rain.level.tile.spawn_level.SpawnStoneWallTile;
 import com.bradboughn.rain.level.tile.spawn_level.SpawnWaterTile;
 import com.bradboughn.rain.level.tile.spawn_level.SpawnWoodFloorTile;
 
-/**
- *
- * @author Brad
- */
 public class Tile 
 {
     
@@ -64,7 +56,7 @@ public class Tile
     
     public void render(int x, int y, Screen screen) 
     {
-        screen.renderTile(x << 4 ,y << 4 , this);
+        screen.renderTile(x << 4 ,y << 4 , sprite);
     }
     
     public boolean solid() 
