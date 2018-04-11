@@ -10,8 +10,8 @@ public class TileCoordinate
     
     public TileCoordinate (int x, int y) 
     {
-        this.x = x * TILE_SIZE;
-        this.y = y * TILE_SIZE;
+            this.x = x * TILE_SIZE;
+            this.y = y * TILE_SIZE;       
     }
     
     public int getX()
@@ -24,6 +24,15 @@ public class TileCoordinate
         return y;
     }
     
+    public void setX(int x)
+    {
+        this.x = x;
+    }
+    
+    public void setY(int y)
+    {
+        this.y = y;
+    }
     public int[] xy() 
     {
         int[] r = new int[2];

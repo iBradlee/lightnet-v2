@@ -1,8 +1,10 @@
 
 package com.bradboughn.rain.level;
 
-import com.bradboughn.rain.entity.Entity;
-import com.bradboughn.rain.entity.projectile.Projectile;
+import com.bradboughn.rain.gameobject.GameObject;
+import com.bradboughn.rain.gameobject.spawner.Spawner;
+import com.bradboughn.rain.gameobject.particle.Particle;
+import com.bradboughn.rain.gameobject.projectile.Projectile;
 import com.bradboughn.rain.graphics.Screen;
 import com.bradboughn.rain.level.tile.Tile;
 import java.util.ArrayList;
@@ -14,9 +16,14 @@ public class Level
     protected int width, height;
     protected int[] tilesInt;
     protected int[] tiles;
+    //@todo Would like to have an ArrayList that holds lists. This would handle entities that have
+    //their own arraylist, in order to keep track of the parent of some of these added entities/lists.
+    //for example, each mob will have their own arraylists for projectile/etc., so that we know what
+    //projectile kills something
+    private List<GameObject> entities = new ArrayList();
+    private List<Projectile> projectiles = new ArrayList();
+    private List<Particle> particles = new ArrayList();
     
-    private List<Entity> entities = new ArrayList();
-    private List<Projectile> lvlProjectiles = new ArrayList();
     
     public static Level spawn = new SpawnLevel ("/textures/levels/spawn_level.png");
     
@@ -33,6 +40,8 @@ public class Level
     {
         loadLevel(path);
         generateLevel();
+        
+//        add(new Spawner(23 * 16, 37 * 16, Spawner.Type.PARTICLE, 10000, this));
     }
     
     protected void generateLevel()
@@ -48,7 +57,6 @@ public class Level
     public void update()
     {
         updateEntities();
-        updateLvlProjectiles();
 //        System.out.println(lvlProjectiles.size());
     }
     
@@ -57,7 +65,7 @@ public class Level
         
     }
     
-    public boolean tileCollision(double x, double y, double newX, double newY, int size)
+    public boolean tileCollision(double x, double y, double newX, double newY, int width, int height)
     {
         boolean solid = false;
         for (int c = 0; c < 4; c++)
@@ -77,40 +85,49 @@ public class Level
             *   you can change these values to achieve different sized collision boxes.
             */
 //</editor-fold>
+            double xTile = ((x + newX) + c % 2 * width / 10 + 2) / 16; 
+            double yTile = ((y + newY) + c / 2 * height / 6 + 4) / 16;
 
-
-            double xTile = ((x + newX) + c % 2 * size / 10 + 2) / 16; 
-            double yTile = ((y + newY) + c / 2 * size / 6 + 4) / 16;
             if (getTile((int)xTile, (int)yTile).solid()) solid = true;
         }
         return solid;
     }
     
     //Render method is finding all 4 sides, and the current position on the map, of the screen, then renders each tile individually
-    public void render(int xScroll,int yScroll, Screen screen)
+    public void render(int xScroll,int yScroll)
     {      
-        screen.setOffset(xScroll, yScroll);                          //setting/updating offset in our screen, based on player movement
+        Screen.setOffset(xScroll, yScroll);                          //setting/updating offset in our screen, based on player movement
         int x0 = xScroll >> 4; // left side                          >>4, is same as divided by 16. This has it check/render every tile, instead of pixels.
-        int x1 = (xScroll + screen.width + 16) >> 4; // right side        >>4 puts numbers in tile precision
+        int x1 = (xScroll + Screen.getWidth() + 16) >> 4; // right side        >>4 puts numbers in tile precision
         int y0 = yScroll >> 4;//top side            
-        int y1 = (yScroll + screen.height + 16) >> 4; // bottom side || +16 adds another tile to fully cover screen.
+        int y1 = (yScroll + Screen.getHeight() + 16) >> 4; // bottom side || +16 adds another tile to fully cover screen.
         
         for (int y = y0; y < y1; y++) 
         {
             for (int x = x0; x < x1; x++) 
             {
-                getTile(x,y).render(x, y, screen);
+                getTile(x,y).render(x, y);
                 // x and y grab every tile on screen currently, by taking the x0, y0 variable
             }    
         }   
-        
-            renderEntities(screen);          
-            renderLvlProjectiles(screen);
+            renderEntities();          
     }
     //Entity functions
-    public void addEntity(Entity e)
+    public void add(GameObject e)
     {
-        entities.add(e);
+        e.init(this);
+        if (e instanceof Particle)
+        {
+            particles.add((Particle)e);
+        }
+        else if (e instanceof Projectile)
+        {
+            projectiles.add((Projectile)e);
+        }
+        else
+        {
+            entities.add(e);
+        }
     }
     
     public void removeEntities()
@@ -119,53 +136,55 @@ public class Level
         {
             if(entities.get(i).isRemoved()) entities.remove(i);
         }
+        for (int i = 0; i < projectiles.size(); i++)
+        {
+            if(projectiles.get(i).isRemoved()) projectiles.remove(i);
+        }
+        for (int i = 0; i < particles.size(); i++)
+        {
+            if(particles.get(i).isRemoved()) particles.remove(i);
+        }
     }
     
     public void updateEntities()
     {
-        for (Entity e : entities)
+        //starting at i = ent.size, so when one is removed, it doesn't skip any. this way, entities that
+        //are removed are replaced by entities which you have already checked.
+        for (int i = entities.size()-1 ; i >= 0; i--)
         {
-            e.update();
+            if (entities.get(i).isRemoved()) entities.remove(i);
+            else entities.get(i).update();
+        }
+        for (int i = projectiles.size()-1 ; i >= 0; i--)
+        {
+            if (projectiles.get(i).isRemoved()) projectiles.remove(i);
+            else projectiles.get(i).update();
+        }
+        for (int i = particles.size()-1 ; i >= 0; i--)
+        {
+            if (particles.get(i).isRemoved()) particles.remove(i);
+            else particles.get(i).update();
         }
     }
     
-    public void renderEntities(Screen screen)
+    public void renderEntities()
     {
-        for (Entity e : entities)
+        for (GameObject e : entities)
         {
-            e.render(screen);
+            e.render();
         }
-    }
-    //Projectile functions
-    public void addProjectile(Projectile p)
-    {
-        p.init(this);
-        lvlProjectiles.add(p);
-    }
-    
-    public void removeLvlProjectiles()
-    {
-        for (int i = 0; i < lvlProjectiles.size(); i++)
+        for (Projectile p : projectiles)
         {
-            if(lvlProjectiles.get(i).isRemoved()) lvlProjectiles.remove(i);
+            p.render();
+        }
+        for (Particle p : particles)
+        {
+            p.render();
         }
     }
     
-    public void renderLvlProjectiles(Screen screen)
-    {
-        for (Projectile p : lvlProjectiles)
-        {
-            p.render(screen);
-        }
-    }
-    
-    public void updateLvlProjectiles()
-    {
-        for (Projectile p : lvlProjectiles)
-        {
-            p.update();
-        }
-    }
+    //ALL BELOW I BELIEVE IS OLD CODE
+
     
     //Grass = 0x00FF00    
     //Flower = 0xFFFF00

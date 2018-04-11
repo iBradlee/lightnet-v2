@@ -1,7 +1,7 @@
 
 package com.bradboughn.rain;
 
-import com.bradboughn.rain.entity.mob.Player;
+import com.bradboughn.rain.gameobject.mob.Player;
 import com.bradboughn.rain.graphics.Screen;
 import com.bradboughn.rain.graphics.Sprite;
 import com.bradboughn.rain.input.Keyboard;
@@ -37,8 +37,6 @@ public class Game implements Runnable
     private Player player;
     private boolean running = false;
     
-    private Screen screen;
-    
     private BufferedImage image = new BufferedImage(WIDTH , HEIGHT, BufferedImage.TYPE_INT_RGB);
     private int[] pixels = ((DataBufferInt)image.getRaster().getDataBuffer()).getData(); // Converting BufferedImage to int, for ability to store Buffer in 1D array
     
@@ -47,7 +45,7 @@ public class Game implements Runnable
         canvas = new Canvas();        
         Dimension size = new Dimension(WIDTH * SCALE, HEIGHT * SCALE);
         canvas.setPreferredSize(size);
-        screen = new Screen(WIDTH, HEIGHT);
+        Screen.init(WIDTH, HEIGHT);
         frame = new JFrame(); 
         key = new Keyboard();
         mouse = new Mouse();
@@ -55,7 +53,7 @@ public class Game implements Runnable
         level = Level.spawn;
         TileCoordinate playerSpawn = new TileCoordinate(23, 37);
         player = new Player(playerSpawn.getX(),playerSpawn.getY(), key);
-        player.init(level); 
+        player.init(level, Sprite.player_D); 
     }
     
     public synchronized void start() 
@@ -131,15 +129,15 @@ public class Game implements Runnable
             canvas.createBufferStrategy(3); // if not, bs is created
             return; // kicks out of if statement, assigns bs to what was created
         }
-        screen.clear(); // clear objects from screen, so previous pixels of moving objects are destroyed
-        int xScroll = player.x - screen.width / 2; //code to center player on screen
-        int yScroll = player.y - screen.height / 2;
-        level.render(xScroll, yScroll, screen); // Render method from Level class, taking as parameters, xScroll and yScroll (x and y, from update method above, dictated by Keyboard class)
+        Screen.clear(); // clear objects from screen, so previous pixels of moving objects are destroyed
+        int xScroll = player.x - Screen.getWidth()/2; //code to center player on screen
+        int yScroll = player.y - Screen.getHeight()/2;
+        level.render(xScroll, yScroll); // Render method from Level class, taking as parameters, xScroll and yScroll (x and y, from update method above, dictated by Keyboard class)
 //        player.render(screen);
 
         for (int i = 0; i < pixels.length; i++) 
         { // cycle thru all pixels in created window
-            pixels[i] = screen.pixels[i]; // takes pixel array data from Screen class (where image is actually being processed), and puts it into pixel array from Game class (this class)
+            pixels[i] = Screen.getPixels()[i]; // takes pixel array data from Screen class (where image is actually being processed), and puts it into pixel array from Game class (this class)
         }
         
         Graphics g = bs.getDrawGraphics();

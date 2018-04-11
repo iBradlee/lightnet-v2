@@ -1,5 +1,5 @@
 
-package com.bradboughn.rain.entity.projectile;
+package com.bradboughn.rain.gameobject.projectile;
 
 import com.bradboughn.rain.graphics.Screen;
 import com.bradboughn.rain.graphics.Sprite;
@@ -8,7 +8,7 @@ public class WizardProjectile extends Projectile
 {
     //initialization block
     {
-        sprite = Sprite.basicProjectile;
+        sprite = Sprite.projectile_basic;
     }
 
     public static final int FIRE_RATE = 20;
@@ -16,13 +16,13 @@ public class WizardProjectile extends Projectile
     public WizardProjectile(int x, int y, double slope) 
     {
         super(x, y, slope);
-        this.x = x - sprite.SIZE/2;
-        this.y = y - sprite.SIZE/2;
+        this.x = x - sprite.WIDTH/2;
+        this.y = y - sprite.HEIGHT/2;
         speed = 6;
         range = 200;
         damage = 20;
-        projX = this.x;
-        projY = this.y;
+        xx = this.x;
+        yy = this.y;
         //<editor-fold defaultstate="collapsed" desc="cos and sin comment">
 //sine and cosine will give us the correct ratio to move each line in, each tick, based upon
 //our angle. Just like Bresenham's Line Algorithm, using the ratio from sin and cos, it will
@@ -32,8 +32,8 @@ public class WizardProjectile extends Projectile
 //or it doesn't move along that axis this time.
 //these are Vectors, I believe
 //</editor-fold>
-        newX = Math.cos(angle) * speed;
-        newY = Math.sin(angle) * speed;   
+        xa = Math.cos(angle) * speed;
+        ya = Math.sin(angle) * speed;   
     }
     
 

@@ -1,16 +1,15 @@
 
-package com.bradboughn.rain.entity.mob;
+package com.bradboughn.rain.gameobject.mob;
 
-import com.bradboughn.rain.Game;
-import com.bradboughn.rain.entity.Entity;
-import com.bradboughn.rain.entity.projectile.Projectile;
-import com.bradboughn.rain.entity.projectile.WizardProjectile;
-import com.bradboughn.rain.graphics.Screen;
+import com.bradboughn.rain.gameobject.GameObject;
+import com.bradboughn.rain.gameobject.particle.Particle;
+import com.bradboughn.rain.gameobject.projectile.Projectile;
+import com.bradboughn.rain.gameobject.projectile.WizardProjectile;
 import com.bradboughn.rain.graphics.Sprite;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Mob extends Entity 
+public abstract class Mob extends GameObject 
 {
     
     protected Sprite sprite;
@@ -36,12 +35,8 @@ public abstract class Mob extends Entity
         
         if (!collision(xa, ya))
         {
-            if (ya == 0)
-            {
-                
-            }
-        x += xa;
-        y += ya;
+            x += xa;
+            y += ya;
         }
     }
     
@@ -50,9 +45,9 @@ public abstract class Mob extends Entity
         updateProjectiles();
     }
     
-    public void render(Screen screen) 
+    public void render() 
     {
-        renderProjectiles(screen);
+        renderProjectiles();
     }
     
     //Finding four corners of tile for collision
@@ -88,8 +83,7 @@ public abstract class Mob extends Entity
     {
         Projectile p = new WizardProjectile(x, y, slope);
         
-//        projectiles.add(p);
-        level.addProjectile(p);
+        level.add(p);
     }
     
     public void updateProjectiles()
@@ -100,24 +94,17 @@ public abstract class Mob extends Entity
         }
     }
     
-    public void renderProjectiles(Screen screen)
+    public void renderProjectiles()
     {
         for (Projectile p : projectiles)
         {
-            p.render(screen);
+            p.render();
         }
     }
     
     public void clearProjectiles()
     {
-//        for (int i = 0; i < projectiles.size(); i++)
-//        {
-//            if(projectiles.get(i).isRemoved())
-//            {
-//                projectiles.remove(i);
-//            }
-//        }
-        level.removeLvlProjectiles();
+        
     }
     
 }

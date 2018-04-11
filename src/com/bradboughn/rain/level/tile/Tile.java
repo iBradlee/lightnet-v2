@@ -54,9 +54,9 @@ public class Tile
         
     }
     
-    public void render(int x, int y, Screen screen) 
+    public void render(int x, int y) 
     {
-        screen.renderTile(x << 4 ,y << 4 , sprite);
+        Screen.renderSprite(x << 4 ,y << 4 , sprite, true);
     }
     
     public boolean solid() 

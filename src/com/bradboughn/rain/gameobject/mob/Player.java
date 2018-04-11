@@ -1,19 +1,21 @@
 
-package com.bradboughn.rain.entity.mob;
+package com.bradboughn.rain.gameobject.mob;
 
 import com.bradboughn.rain.Game;
-import com.bradboughn.rain.entity.projectile.Projectile;
-import com.bradboughn.rain.entity.projectile.WizardProjectile;
+import com.bradboughn.rain.gameobject.spawner.Spawner;
+import com.bradboughn.rain.gameobject.projectile.WizardProjectile;
 import com.bradboughn.rain.graphics.Screen;
 import com.bradboughn.rain.graphics.Sprite;
 import com.bradboughn.rain.input.Keyboard;
 import com.bradboughn.rain.input.Mouse;
+import com.bradboughn.rain.level.Level;
+import java.awt.event.KeyEvent;
 
-public class Player extends Mob{
+public class Player extends Mob
+{
     
     private Keyboard key;
     
-    private Sprite sprite;
     private int anim = 0;
     private boolean walking = false;
 
@@ -30,17 +32,17 @@ public class Player extends Mob{
     *   as handling where we're rendering the player sprite. I want, in the most basic form, the variable
     *   handling the Player's rendering coordinates to be the exact same variable that deals with
     *   handling projectile angles when using the mouse as a destination, and player location (in relation
-    *   to the screen/window) as the "anchor" point, or starting point. That way, when chaning the rendering
+    *   to the screen/window) as the "anchor" point, or starting point. That way, when changing the rendering
     *   location, it also dynamically changes the math behind figuring out the angle.
     */
     
     /*@todo
     *   Need to actually render player in center of screen. Player is not actually centered properly now
     */
-    public Player (Keyboard input) 
-    {
-        this.key = input;
-    }
+//    public Player (Keyboard input) 
+//    {
+//        this.key = input;
+//    }
     
     public Player (int x, int y, Keyboard key) 
     {
@@ -68,19 +70,19 @@ public class Player extends Mob{
             walking = false;
         }     
         
-        clearProjectiles();
+        updateAnimation();
+//        clearProjectiles();
         updateShooting();
-        updateProjectiles();
-        
+//        updateProjectiles();
     }
     
-    public void render(Screen screen)
+    public void render()
     {
         int xx = x - 16;
         int yy = y - 16;
-        renderProjectiles(screen);
-        updateAnimation();
-        screen.renderEntity(xx, yy, sprite);
+//        renderProjectiles();
+        Screen.renderSprite(xx, yy, sprite, true);
+        
     }
     /**
      * Checks for correct input to shoot, at the start. Finds delta x, and delta y, between current
@@ -99,59 +101,71 @@ public class Player extends Mob{
             shoot(x, y, slope);
             fireRate = WizardProjectile.FIRE_RATE;
         }
+        
+
     }
     
     public void updateAnimation()
     {
         if (dir == 0) 
         {
-            sprite = Sprite.playerU;
+            sprite = Sprite.player_U;
             if (walking) 
             {
                 if (anim % 30 < 10)
-                    sprite = Sprite.playerU1;
+                    sprite = Sprite.player_U1;
                 else if (anim % 30 >= 10 && anim % 30 <20)
-                    sprite = Sprite.playerU;
-                else sprite = Sprite.playerU2;
+                    sprite = Sprite.player_U;
+                else sprite = Sprite.player_U2;
             }
         }
         if (dir == 1) 
         {
-            sprite = Sprite.playerR;
+            sprite = Sprite.player_R;
             if (walking) 
             {
                 if (anim % 30 < 10)
-                    sprite = Sprite.playerR1;
+                    sprite = Sprite.player_R1;
                 else if (anim % 30 >= 10 && anim % 30 <20)
-                    sprite = Sprite.playerR;
-                else sprite = Sprite.playerR2;
+                    sprite = Sprite.player_R;
+                else sprite = Sprite.player_R2;
             }
         }
         if (dir == 2) 
         {
-            sprite = Sprite.playerD;
+            sprite = Sprite.player_D;
             if (walking) 
             {
                 if (anim % 30 < 10)
-                    sprite = Sprite.playerD1;
+                    sprite = Sprite.player_D1;
                 else if (anim % 30 >= 10 && anim % 30 < 20)
-                    sprite = Sprite.playerD;
-                else sprite = Sprite.playerD2;
+                    sprite = Sprite.player_D;
+                else sprite = Sprite.player_D2;
             }
         }
         if (dir == 3) 
         {
-            sprite = Sprite.playerL;
+            sprite = Sprite.player_L;
             if (walking) 
             {
                 if (anim % 30 < 10)
-                    sprite = Sprite.playerL1;
+                    sprite = Sprite.player_L1;
                 else if (anim % 30 >= 10 && anim % 30 < 20)
-                    sprite = Sprite.playerL;
-                else sprite = Sprite.playerL2;
+                    sprite = Sprite.player_L;
+                else sprite = Sprite.player_L2;
             }
-            
         }
+    }
+    
+    public void init(Level level, Sprite sprite) 
+    {
+        this.level = level;
+        this.sprite = sprite;
+        level.add(this);
+    }
+
+    public Sprite getSprite() {
+        return sprite;
     }
     
     

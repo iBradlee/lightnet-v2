@@ -14,7 +14,7 @@ import java.awt.event.KeyListener;
  */
 public class Keyboard implements KeyListener 
 {
-    private static final byte NUM_KEYBOARD_KEYS = 120;
+    private static final int NUM_KEYBOARD_KEYS = 192;
     private final boolean[] keys = new boolean[NUM_KEYBOARD_KEYS];
     public boolean up, down, left, right;
    
@@ -29,9 +29,11 @@ public class Keyboard implements KeyListener
         right = keys[KeyEvent.VK_D] || keys[KeyEvent.VK_RIGHT];
     }
         
+    public boolean isKey(int keycode)
+    {
+        return keys[keycode];
+    }
 
-        
-        
     
 
     @Override
