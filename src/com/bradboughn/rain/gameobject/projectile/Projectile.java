@@ -1,14 +1,14 @@
 
 package com.bradboughn.rain.gameobject.projectile;
 
+import com.bradboughn.rain.camera.Camera;
+import com.bradboughn.rain.collision.AABB;
 import com.bradboughn.rain.gameobject.GameObject;
 import com.bradboughn.rain.gameobject.spawner.Spawner;
 import com.bradboughn.rain.gameobject.spawner.ParticleSpawner;
-import com.bradboughn.rain.graphics.Screen;
 import com.bradboughn.rain.graphics.Sprite;
-import com.bradboughn.rain.level.Level;
 
-public class Projectile extends GameObject 
+public abstract class Projectile extends GameObject 
 {
     /*@todo
     *   need to check all corners of projectile, for collision. As of now, even if a projectile "hits"
@@ -31,24 +31,26 @@ public class Projectile extends GameObject
     
     public Projectile(double x, double y, double slope)
     {
-        
+        this.x = (int)x;
+        this.y = (int)y;
         xOrigin = x;
         yOrigin = y;
         angle = slope;
+        
     }
     
     public void update()
     {
         if (distance < range)
         {
-            if (!level.tileCollision(xx, yy, xa, ya, sprite.WIDTH, sprite.HEIGHT))
+            if (!level.tileCollision(xx, yy, xa, ya, this))
             {
             move();
             }
             else 
             {
                 remove();
-                level.add(new ParticleSpawner((int)xx, (int)yy, Spawner.Type.PARTICLE_WIZ, 25, 20, level));
+                level.add(new ParticleSpawner((int)xx, (int)yy, Spawner.Type.PARTICLE_WIZ, 35, 25, level));
             }
 
         } 
@@ -59,14 +61,16 @@ public class Projectile extends GameObject
     
     public void render()
     {
-        Screen.renderSprite((int)xx, (int)yy, sprite, true);
+        Camera.renderSprite((int)xx, (int)yy, sprite, true);
     }
     
     protected void move()
     {
         xx += xa;
-        yy += ya;  
-        
+        yy += ya; 
+        //updating original x,y, as well as doubles xx,yy
+
+//        System.out.println("xx : " + xx + ",        yy : " + yy + "\nx : " + x + ",         y : " + y + "\n");
     }
     
     protected double calculateDistance() 
@@ -75,9 +79,6 @@ public class Projectile extends GameObject
         return distance;
     }
     
-    public void init(Level level)
-    {
-        this.level = level;
-    }
+
     
 }

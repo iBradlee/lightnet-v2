@@ -1,7 +1,7 @@
 
 package com.bradboughn.rain.gameobject.projectile;
 
-import com.bradboughn.rain.graphics.Screen;
+import com.bradboughn.rain.collision.AABB;
 import com.bradboughn.rain.graphics.Sprite;
 
 public class WizardProjectile extends Projectile 
@@ -11,7 +11,7 @@ public class WizardProjectile extends Projectile
         sprite = Sprite.projectile_basic;
     }
 
-    public static final int FIRE_RATE = 20;
+    public static int FIRE_RATE = 10;
     
     public WizardProjectile(int x, int y, double slope) 
     {
@@ -20,9 +20,13 @@ public class WizardProjectile extends Projectile
         this.y = y - sprite.HEIGHT/2;
         speed = 6;
         range = 200;
+        FIRE_RATE = 10;
         damage = 20;
         xx = this.x;
         yy = this.y;
+        
+        aabb = new AABB(x,y,sprite.WIDTH, sprite.HEIGHT);
+        
         //<editor-fold defaultstate="collapsed" desc="cos and sin comment">
 //sine and cosine will give us the correct ratio to move each line in, each tick, based upon
 //our angle. Just like Bresenham's Line Algorithm, using the ratio from sin and cos, it will

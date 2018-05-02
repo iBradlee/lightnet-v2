@@ -15,13 +15,13 @@ import java.awt.event.KeyListener;
 public class Keyboard implements KeyListener 
 {
     private static final int NUM_KEYBOARD_KEYS = 192;
-    private final boolean[] keys = new boolean[NUM_KEYBOARD_KEYS];
-    public boolean up, down, left, right;
+    private static final boolean[] keys = new boolean[NUM_KEYBOARD_KEYS];
+    public static boolean up, down, left, right;
    
     //@todo
-    //Redesign Keyboard class with the assumption that we'll only have 1 static Keyboard instance, just
-    //as we did with Mouse.
-    public void update()
+    //Redesign Keyboard class, without using KeyListener, as it's very brittle and finicky. Instead
+    //using Key Bindings, or something similar. Need to research this.
+    public static void update()
     {
         up = keys[KeyEvent.VK_W] || keys[KeyEvent.VK_UP];
         down = keys[KeyEvent.VK_S] || keys[KeyEvent.VK_DOWN];
@@ -29,7 +29,7 @@ public class Keyboard implements KeyListener
         right = keys[KeyEvent.VK_D] || keys[KeyEvent.VK_RIGHT];
     }
         
-    public boolean isKey(int keycode)
+    public static boolean isKey(int keycode)
     {
         return keys[keycode];
     }
@@ -53,5 +53,26 @@ public class Keyboard implements KeyListener
     {
         keys[e.getKeyCode()] = false;
     }
+
+    public static boolean isUp()
+    {
+        return up;
+    }
+
+    public static boolean isDown()
+    {
+        return down;
+    }
+
+    public static boolean isLeft()
+    {
+        return left;
+    }
+
+    public static boolean isRight()
+    {
+        return right;
+    }
+    
     
 }

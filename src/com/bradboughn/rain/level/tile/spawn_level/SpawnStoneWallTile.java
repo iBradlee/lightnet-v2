@@ -25,7 +25,7 @@ public class SpawnStoneWallTile extends Tile
         sprite = Sprite.spawn_stoneWall;
     }
     
-    public boolean solid() 
+    public boolean isSolid() 
     {
         return true;
     }

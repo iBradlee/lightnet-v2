@@ -1,18 +1,19 @@
 
 package com.bradboughn.rain.gameobject;
 
-import com.bradboughn.rain.graphics.Screen;
+import com.bradboughn.rain.collision.AABB;
 import com.bradboughn.rain.level.Level;
 import java.util.Random;
 
 public abstract class GameObject 
 {
     
-    public int x, y;
+    protected int x, y;
+    protected int centerX, centerY;
     private boolean removed = false;
     protected Level level;
     protected final Random rand = new Random();
-    
+    protected AABB aabb;
     
     public void update() 
     {
@@ -39,4 +40,26 @@ public abstract class GameObject
     {
         this.level = level;
     }
+
+    public int getX()
+    {
+        return x;
+    }
+
+    public int getY()
+    {
+        return y;
+    }
+
+    public Level getLevel()
+    {
+        return level;
+    }
+
+    public AABB getAabb()
+    {
+        return aabb;
+    }
+    
+    
 }

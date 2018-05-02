@@ -1,8 +1,9 @@
 
 package com.bradboughn.rain.gameobject.particle;
 
+import com.bradboughn.rain.camera.Camera;
+import com.bradboughn.rain.collision.AABB;
 import com.bradboughn.rain.gameobject.GameObject;
-import com.bradboughn.rain.graphics.Screen;
 import com.bradboughn.rain.graphics.Sprite;
 
 public class Particle extends GameObject{
@@ -25,6 +26,7 @@ public class Particle extends GameObject{
         this.life = rand.nextInt(life) + life;
         sprite = new Sprite(rand.nextInt(4),rand.nextInt(4),0xffffff00); 
         
+        aabb = new AABB(x,y, sprite.WIDTH, sprite.HEIGHT);
         this.xa = rand.nextGaussian();
         this.ya = rand.nextGaussian();
         this.zz = 0.0;
@@ -36,7 +38,7 @@ public class Particle extends GameObject{
     {
         life--;
         if(life<=0) remove();
-        if (!level.tileCollision(xx, yy, xa, ya, sprite.WIDTH, sprite.HEIGHT))
+        if (!level.tileCollision(xx, yy, xa, ya, this))
         {
             //za is simulating increase in gravity here
             za -= 0.1;
@@ -51,7 +53,7 @@ public class Particle extends GameObject{
     
     public void render()
     {
-            Screen.renderSprite((int)xx, (int)yy , sprite, true);
+            Camera.renderSprite((int)xx, (int)yy , sprite, true);
     }
 
 }

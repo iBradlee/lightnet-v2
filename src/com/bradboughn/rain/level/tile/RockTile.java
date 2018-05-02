@@ -23,7 +23,7 @@ public class RockTile extends Tile {
         sprite = Sprite.grassRock;
     }
     
-    public boolean solid() {
+    public boolean isSolid() {
         return true;
     }
     

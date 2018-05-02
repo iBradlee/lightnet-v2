@@ -1,8 +1,8 @@
 
 package com.bradboughn.rain.gameobject.mob;
 
+import com.bradboughn.rain.collision.AABB;
 import com.bradboughn.rain.gameobject.GameObject;
-import com.bradboughn.rain.gameobject.particle.Particle;
 import com.bradboughn.rain.gameobject.projectile.Projectile;
 import com.bradboughn.rain.gameobject.projectile.WizardProjectile;
 import com.bradboughn.rain.graphics.Sprite;
@@ -20,12 +20,12 @@ public abstract class Mob extends GameObject
     
     protected List<Projectile> projectiles = new ArrayList();
     
-    public void move(int xa, int ya) 
+    public void move(int xa, int ya, GameObject go) 
     {
         if(xa != 0 && ya != 0) 
         {
-            move(xa,0);
-            move(0,ya);
+            move(xa,0,go);
+            move(0,ya,go);
             return;
         }
         if (xa > 0) dir = 1;
@@ -33,7 +33,7 @@ public abstract class Mob extends GameObject
         if (ya > 0) dir = 2;
         if (ya < 0) dir = 0;
         
-        if (!collision(xa, ya))
+        if (!level.tileCollision(x, y, xa, ya, go))
         {
             x += xa;
             y += ya;
@@ -73,7 +73,7 @@ public abstract class Mob extends GameObject
 //</editor-fold>
             int xTile = ((x + xa) + c % 2 * 14 - 7) / 16; 
             int yTile = ((y +ya) + c / 2 * 12 + 3) / 16;
-            if (level.getTile(xTile, yTile).solid()) solid = true;
+            if (level.getTile(xTile, yTile).isSolid()) solid = true;
         }
         return solid;
     }

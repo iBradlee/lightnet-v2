@@ -25,7 +25,7 @@ public class SpawnHedgeTile extends Tile
         sprite = Sprite.spawn_hedge;
     }
     
-    public boolean solid()
+    public boolean isSolid()
     {
         return true; 
     }

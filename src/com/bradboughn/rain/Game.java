@@ -1,9 +1,9 @@
 
 package com.bradboughn.rain;
 
+import com.bradboughn.rain.camera.Camera;
 import com.bradboughn.rain.gameobject.mob.Player;
 import com.bradboughn.rain.graphics.Screen;
-import com.bradboughn.rain.graphics.Sprite;
 import com.bradboughn.rain.input.Keyboard;
 import com.bradboughn.rain.input.Mouse;
 import com.bradboughn.rain.level.Level;
@@ -27,6 +27,7 @@ public class Game implements Runnable
     private static final int screenWcenter = (WIDTH * SCALE)/2;
     private static final int screenHcenter = (HEIGHT * SCALE)/2;
     private static final String title = "Rain";
+    
     
     private Thread thread;
     private JFrame frame;
@@ -52,8 +53,9 @@ public class Game implements Runnable
         initInput();
         level = Level.spawn;
         TileCoordinate playerSpawn = new TileCoordinate(23, 37);
-        player = new Player(playerSpawn.getX(),playerSpawn.getY(), key);
-        player.init(level, Sprite.player_D); 
+        player = new Player(playerSpawn.getX(),playerSpawn.getY());
+        Camera.init(WIDTH, HEIGHT, player.getX() - Camera.width/2, player.getY() - Camera.height/2, level, player);
+        level.add(player);
     }
     
     public synchronized void start() 
@@ -114,11 +116,13 @@ public class Game implements Runnable
     
     public void update()
     { 
-        key.update();
+        Keyboard.update();
         Mouse.update();
-    //make sure entity (player) isn't updated 2x per tick, as it would be if this was uncommented
+    //make sure entity (player) isn't updated 2x per tick, as it would be if this was uncommented, bc it's updated in level
 //    player.update();
         level.update();
+        Camera.update();
+
     }
     
     public void render()
@@ -130,14 +134,17 @@ public class Game implements Runnable
             return; // kicks out of if statement, assigns bs to what was created
         }
         Screen.clear(); // clear objects from screen, so previous pixels of moving objects are destroyed
-        int xScroll = player.x - Screen.getWidth()/2; //code to center player on screen
-        int yScroll = player.y - Screen.getHeight()/2;
-        level.render(xScroll, yScroll); // Render method from Level class, taking as parameters, xScroll and yScroll (x and y, from update method above, dictated by Keyboard class)
+        Camera.clear();
+//        int xScroll = player.getX() - Screen.getWidth()/2; //code to center player on screen
+//        int yScroll = player.getY() - Screen.getHeight()/2;
+//        level.render(xScroll, yScroll); // Render method from Level class, taking as parameters, xScroll and yScroll (x and y, from update method above, dictated by Keyboard class)
+        Camera.render();
 //        player.render(screen);
 
         for (int i = 0; i < pixels.length; i++) 
         { // cycle thru all pixels in created window
-            pixels[i] = Screen.getPixels()[i]; // takes pixel array data from Screen class (where image is actually being processed), and puts it into pixel array from Game class (this class)
+//            pixels[i] = Screen.getPixels()[i]; // takes pixel array data from Screen class (where image is actually being processed), and puts it into pixel array from Game class (this class)
+            pixels[i] = Camera.getPixels()[i];
         }
         
         Graphics g = bs.getDrawGraphics();

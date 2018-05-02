@@ -4,6 +4,15 @@ package com.bradboughn.rain.graphics;
 public class Sprite 
 {
     
+    /*@todo
+    *   May need to SLIGHTLY overhaul sprites/spritesheet a tad. I want to, before creating public
+    *   static sprites, isolate only the colored, actual pixels that make up the sprite, and save those
+    *   into the image, doing away with all transparent pixels. This means I would have to specify if
+    *   a sprite is supposed to be transparent, like a ghosty-boi or somesuch, and also write those
+    *   semi-transparent pixels to the sprite (by just doing the 0xff shift to isolate it(can refer
+    *   to original LightNet Engine for specific code))
+    */
+    
     public final int WIDTH, HEIGHT;
     private int x, y;
     private boolean transparent = false;

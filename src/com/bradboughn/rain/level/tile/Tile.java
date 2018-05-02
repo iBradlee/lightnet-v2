@@ -11,9 +11,12 @@ import com.bradboughn.rain.level.tile.spawn_level.SpawnWoodFloorTile;
 
 public class Tile 
 {
-    
+ 
+    //@todo need to implement TILE_SIZE into spritesheet, i think? and/or sprite?
+    public static int TILE_SIZE = 16;
     public int x, y;
     public Sprite sprite;
+
     
     //Basic FIRST Tiles
     public static Tile grass = new GrassTile();
@@ -56,10 +59,10 @@ public class Tile
     
     public void render(int x, int y) 
     {
-        Screen.renderSprite(x << 4 ,y << 4 , sprite, true);
+        Screen.renderSprite(x << 4, y << 4, sprite, true);
     }
     
-    public boolean solid() 
+    public boolean isSolid() 
     {
         return false;
     }

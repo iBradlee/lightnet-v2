@@ -65,7 +65,7 @@ public class Screen
                 int xa = x + xp; 
                 int xs = x;
                 int col = sprite.getPixels()[x + y * sprite.WIDTH];
-                if (col == 0x00ffffff)continue;
+                if (col == 0x00ffffff) continue;
                 if (flip == 1 || flip == 3) xs = sprite.WIDTH -1 - x;
                 if (xa < -sprite.WIDTH || xa >= width || ya < 0 || ya >= height) break;
                 if (xa < 0) xa = 0;
@@ -156,6 +156,7 @@ public class Screen
             }
         }
     }
+    
     //renderEntity w/ flip functionality
     public static void renderEntity (int xp, int yp, Sprite sprite, int flip)
     {

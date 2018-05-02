@@ -1,11 +1,13 @@
 
 package com.bradboughn.rain.level;
 
+import com.bradboughn.rain.camera.Camera;
+import com.bradboughn.rain.collision.AABB;
 import com.bradboughn.rain.gameobject.GameObject;
-import com.bradboughn.rain.gameobject.spawner.Spawner;
 import com.bradboughn.rain.gameobject.particle.Particle;
 import com.bradboughn.rain.gameobject.projectile.Projectile;
 import com.bradboughn.rain.graphics.Screen;
+import com.bradboughn.rain.graphics.Sprite;
 import com.bradboughn.rain.level.tile.Tile;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,32 +67,57 @@ public class Level
         
     }
     
-    public boolean tileCollision(double x, double y, double newX, double newY, int width, int height)
+    //don't believe there's any reason to pass in as double; think everything casts to int before computing
+//    public boolean tileCollision(double x, double y, double dx, double dy, GameObject go)
+//    {
+//        boolean collide = false;
+//        
+//        int w = go.getAabb().getHalfwidth()[0] << 1;
+//        int h = go.getAabb().getHalfwidth()[1] << 1;
+//        
+//        //if movement is down, add height to y, to check for collision, starting at bottom of AABB
+//        //else start at y
+//        int leftside = dy > 0 ? (int)y + h  : (int)y;
+//        int 
+//        
+//        
+//        
+//        int xt = (int)(x + dx)/Tile.TILE_SIZE;
+//        int yt = (int)(y + dy)/Tile.TILE_SIZE;
+//        if (getTile(xt, yt).isSolid()) 
+//        {
+//            AABB b = new AABB((int)xt * Tile.TILE_SIZE, (int)yt * Tile.TILE_SIZE, Tile.TILE_SIZE, Tile.TILE_SIZE);
+//            if (!(go instanceof Particle))
+//            {
+//                Camera.setVisAABB(b);
+//            }
+//
+//            go.getAabb().setAABBpos((int)x, (int)y);
+//            if (AABB.checkAABBvAABB(go.getAabb(), b)) return true;
+//        }
+////            System.out.println("TILE IS SOLID BITCH!" + 
+////                "\nxt : " + (int)xt  + ",        yt : " + (int)yt);
+//        return collide;
+//    }
+    public boolean tileCollision(double x, double y, double dx, double dy, GameObject go)
     {
-        boolean solid = false;
-        for (int c = 0; c < 4; c++)
+        boolean collide = false;
+        double xt = (x + dx)/Tile.TILE_SIZE;
+        double yt = (y + dy)/Tile.TILE_SIZE;
+        if (getTile((int)xt, (int)yt).isSolid()) 
         {
-            //<editor-fold defaultstate="collapsed" desc="Collision "info"">
-            /*  Actual "corner code" goes between "(x+xa)" and "/16". (x+xa) is obv. the absolute position of
-            *   Mob, and "/16" gets it in Tile precision, as opposed to pixel.
-            *   NOTE: To adjust/play with tile collision here, think of this algorithm kinda like this:
-            *   (c % 2) and (c / 2) cycles through the 4 corners of a tile for each axis, in a way. The
-            *   x portion checks for 4 corners of a tile ON THE X AXIS, and the y portion checks for the
-            *   same, but ON THE Y AXIS, to locate the actual tile using those x and y values. Now the
-            *   actual collision stuff:
-            *   (* 14 -7) and (* 12 + 3) KIND OF work in the following way:
-            *   the "* 14" for the x, can be changed to change how far/close on the right side/corner of a tile to
-            *   classify it as colliding. The "-7" does the same, but checks for the left side/corner of a tile.
-            *   The exact same is true for y. "* 12" handles the bottom side/corner, and "+3" handles top.
-            *   you can change these values to achieve different sized collision boxes.
-            */
-//</editor-fold>
-            double xTile = ((x + newX) + c % 2 * width / 10 + 2) / 16; 
-            double yTile = ((y + newY) + c / 2 * height / 6 + 4) / 16;
+            AABB b = new AABB((int)xt * Tile.TILE_SIZE, (int)yt * Tile.TILE_SIZE, Tile.TILE_SIZE, Tile.TILE_SIZE);
+            if (!(go instanceof Particle))
+            {
+                Camera.setVisAABB(b);
+            }
 
-            if (getTile((int)xTile, (int)yTile).solid()) solid = true;
+            go.getAabb().setAABBpos((int)x, (int)y);
+            if (AABB.checkAABBvAABB(go.getAabb(), b)) return true;
         }
-        return solid;
+//            System.out.println("TILE IS SOLID BITCH!" + 
+//                "\nxt : " + (int)xt  + ",        yt : " + (int)yt);
+        return collide;
     }
     
     //Render method is finding all 4 sides, and the current position on the map, of the screen, then renders each tile individually
@@ -110,7 +137,7 @@ public class Level
                 // x and y grab every tile on screen currently, by taking the x0, y0 variable
             }    
         }   
-            renderEntities();          
+            renderEntities();
     }
     //Entity functions
     public void add(GameObject e)
@@ -128,6 +155,14 @@ public class Level
         {
             entities.add(e);
         }
+    }
+    
+    //only difference is this doesn't run init(), because Player already ran init() in main game class
+    //because of that, it inits Player, which adds level, and calls level.add(this), which then tries
+    //to initialize again, and goes 'round and 'round.
+    public void addPlayer(GameObject go)
+    {
+        entities.add(go);
     }
     
     public void removeEntities()
@@ -210,4 +245,16 @@ public class Level
         if (tiles[x + y * width] == Tile.col_spawn_water) return Tile.spawn_water;
         return Tile.voidTile;
     }
+
+    public int getWidth()
+    {
+        return width;
+    }
+
+    public int getHeight()
+    {
+        return height;
+    }
+    
+    
 }

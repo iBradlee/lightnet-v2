@@ -1,6 +1,7 @@
 
 package com.bradboughn.rain.input;
 
+import com.bradboughn.rain.Game;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -59,6 +60,7 @@ public class Mouse implements MouseListener, MouseMotionListener, MouseWheelList
     @Override
     public void mouseDragged(MouseEvent e) 
     {
+
         mouseX = e.getX();
         mouseY = e.getY();
     }
@@ -77,11 +79,11 @@ public class Mouse implements MouseListener, MouseMotionListener, MouseWheelList
     }
 
     public static int getX() {
-        return mouseX;
+        return mouseX / Game.getScale();
     }
 
     public static int getY() {
-        return mouseY;
+        return mouseY / Game.getScale();
     }
 
     public static boolean isMouseL() {

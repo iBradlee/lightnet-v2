@@ -1,20 +1,16 @@
 
 package com.bradboughn.rain.gameobject.mob;
 
-import com.bradboughn.rain.Game;
-import com.bradboughn.rain.gameobject.spawner.Spawner;
+import com.bradboughn.rain.camera.Camera;
+import com.bradboughn.rain.collision.AABB;
 import com.bradboughn.rain.gameobject.projectile.WizardProjectile;
-import com.bradboughn.rain.graphics.Screen;
 import com.bradboughn.rain.graphics.Sprite;
 import com.bradboughn.rain.input.Keyboard;
 import com.bradboughn.rain.input.Mouse;
 import com.bradboughn.rain.level.Level;
-import java.awt.event.KeyEvent;
 
 public class Player extends Mob
 {
-    
-    private Keyboard key;
     
     private int anim = 0;
     private boolean walking = false;
@@ -44,12 +40,15 @@ public class Player extends Mob
 //        this.key = input;
 //    }
     
-    public Player (int x, int y, Keyboard key) 
+    public Player (int x, int y) 
     {
+        sprite = Sprite.player_U;
         this.x = x;
         this.y = y;
-        this.key = key;
+        centerX = this.x + sprite.WIDTH/2;
+        centerY = this.y + sprite.HEIGHT/2;
         fireRate = WizardProjectile.FIRE_RATE;
+        aabb = new AABB(x, y, sprite.WIDTH, sprite.HEIGHT);
     }
     
     public void update() 
@@ -58,30 +57,30 @@ public class Player extends Mob
         int xa = 0, ya = 0;
         if (anim < 7500) anim++; 
         else anim = 0;
-        if (key.up) ya--;
-        if (key.down) ya++;
-        if (key.left) xa--;
-        if (key.right) xa++;
+        if (Keyboard.up) ya--;
+        if (Keyboard.down) ya++;
+        if (Keyboard.left) xa--;
+        if (Keyboard.right) xa++;
         
         if (xa != 0 || ya != 0) {
-            move(xa,ya);
+            move(xa,ya, this);
             walking = true;
         } else {
             walking = false;
         }     
-        
+
         updateAnimation();
 //        clearProjectiles();
         updateShooting();
 //        updateProjectiles();
+
     }
     
     public void render()
     {
-        int xx = x - 16;
-        int yy = y - 16;
-//        renderProjectiles();
-        Screen.renderSprite(xx, yy, sprite, true);
+//        int xx = x - 16;
+//        int yy = y - 16;
+        Camera.renderSprite(x, y, sprite, true);
         
     }
     /**
@@ -95,10 +94,10 @@ public class Player extends Mob
     {
         if (Mouse.isMouseL() && fireRate <=0)
         {
-            double dx = Mouse.getX() - Game.getScreenWcenter();
-            double dy = Mouse.getY() - Game.getScreenHcenter();
+            double dx = Mouse.getX() - (x + sprite.WIDTH/2 - Camera.getOffsetX());
+            double dy = Mouse.getY() - (y + sprite.HEIGHT/2 - Camera.getOffsetY());
             double slope = Math.atan2(dy, dx);
-            shoot(x, y, slope);
+            shoot(x + sprite.WIDTH/2 , y + sprite.HEIGHT/2, slope);
             fireRate = WizardProjectile.FIRE_RATE;
         }
         
@@ -157,16 +156,16 @@ public class Player extends Mob
         }
     }
     
-    public void init(Level level, Sprite sprite) 
+    public void init(Level level) 
     {
         this.level = level;
-        this.sprite = sprite;
-        level.add(this);
+//        level.addPlayer(this);
     }
 
     public Sprite getSprite() {
         return sprite;
     }
+    
     
     
     
