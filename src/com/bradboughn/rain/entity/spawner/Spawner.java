@@ -1,15 +1,15 @@
 
-package com.bradboughn.rain.gameobject.spawner;
+package com.bradboughn.rain.entity.spawner;
 
-import com.bradboughn.rain.gameobject.GameObject;
-import com.bradboughn.rain.gameobject.particle.Particle;
+import com.bradboughn.rain.entity.Entity;
+import com.bradboughn.rain.entity.particle.Particle;
 import com.bradboughn.rain.level.Level;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Spawner extends GameObject{
+public class Spawner extends Entity{
     
-    private List<GameObject> entities = new ArrayList();
+    private List<Entity> entities = new ArrayList();
     
     public enum Type
     {

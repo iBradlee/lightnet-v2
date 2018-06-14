@@ -18,9 +18,13 @@ public class FlowerTile extends Tile {
         super(sprite);
     }
     
+    public FlowerTile(Sprite sprite, int x, int y) {
+        super(sprite, x, y);
+    }
+    
     public FlowerTile()
     {
-        sprite = Sprite.grassFlower;
+        sprite = Sprite.GRASS_FLOWER;
     }
     
 

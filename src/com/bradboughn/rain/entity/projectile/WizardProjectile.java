@@ -1,5 +1,5 @@
 
-package com.bradboughn.rain.gameobject.projectile;
+package com.bradboughn.rain.entity.projectile;
 
 import com.bradboughn.rain.collision.AABB;
 import com.bradboughn.rain.graphics.Sprite;
@@ -8,7 +8,7 @@ public class WizardProjectile extends Projectile
 {
     //initialization block
     {
-        sprite = Sprite.projectile_basic;
+        setSprite(Sprite.projectile_basic);
     }
 
     public static int FIRE_RATE = 10;
@@ -16,16 +16,16 @@ public class WizardProjectile extends Projectile
     public WizardProjectile(int x, int y, double slope) 
     {
         super(x, y, slope);
-        this.x = x - sprite.WIDTH/2;
-        this.y = y - sprite.HEIGHT/2;
-        speed = 6;
+        this.x = x - getSprite().WIDTH/2;
+        this.y = y - getSprite().HEIGHT/2;
+        speed = 8;
         range = 200;
         FIRE_RATE = 10;
         damage = 20;
         xx = this.x;
         yy = this.y;
         
-        aabb = new AABB(x,y,sprite.WIDTH, sprite.HEIGHT);
+        aabb = new AABB(x, y, getSprite().WIDTH -1, getSprite().HEIGHT -1, this);
         
         //<editor-fold defaultstate="collapsed" desc="cos and sin comment">
 //sine and cosine will give us the correct ratio to move each line in, each tick, based upon
@@ -36,9 +36,10 @@ public class WizardProjectile extends Projectile
 //or it doesn't move along that axis this time.
 //these are Vectors, I believe
 //</editor-fold>
-        xa = Math.cos(angle) * speed;
-        ya = Math.sin(angle) * speed;   
+        xa = (Math.cos(angle) * speed)/2;
+        ya = (Math.sin(angle) * speed)/2;  
     }
+    
     
 
 

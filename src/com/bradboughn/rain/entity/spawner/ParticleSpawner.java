@@ -1,7 +1,7 @@
 
-package com.bradboughn.rain.gameobject.spawner;
+package com.bradboughn.rain.entity.spawner;
 
-import com.bradboughn.rain.gameobject.particle.Particle;
+import com.bradboughn.rain.entity.particle.Particle;
 import com.bradboughn.rain.level.Level;
 
 public class ParticleSpawner extends Spawner 

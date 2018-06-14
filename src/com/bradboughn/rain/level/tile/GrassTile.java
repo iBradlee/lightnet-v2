@@ -21,9 +21,13 @@ public class GrassTile extends Tile
         super(sprite);
     }
     
+    public GrassTile(Sprite sprite, int x, int y) {
+        super(sprite, x, y);
+    }
+    
     public GrassTile()
     {
-        sprite = Sprite.grass;
+        sprite = Sprite.GRASS;
     }
     
 

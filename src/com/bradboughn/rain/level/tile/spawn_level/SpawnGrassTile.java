@@ -20,9 +20,13 @@ public class SpawnGrassTile extends Tile
         super(sprite);
     }
     
+    public SpawnGrassTile(Sprite sprite, int x, int y) {
+        super(sprite, x, y);
+    }
+    
     public SpawnGrassTile()
     {
-        sprite = Sprite.spawn_grass;
+        sprite = Sprite.SPAWN_GRASS;
     }
     
 

@@ -20,9 +20,13 @@ public class SpawnWaterTile extends Tile
         super(sprite);
     }
     
+    public SpawnWaterTile(Sprite sprite, int x, int y) {
+        super(sprite, x, y);
+    }
+    
     public SpawnWaterTile()
     {
-        sprite = Sprite.spawn_water;
+        sprite = Sprite.SPAWN_WATER;
     }
     
 }

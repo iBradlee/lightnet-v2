@@ -17,6 +17,7 @@ public class Keyboard implements KeyListener
     private static final int NUM_KEYBOARD_KEYS = 192;
     private static final boolean[] keys = new boolean[NUM_KEYBOARD_KEYS];
     public static boolean up, down, left, right;
+    public static boolean F1;
    
     //@todo
     //Redesign Keyboard class, without using KeyListener, as it's very brittle and finicky. Instead
@@ -27,6 +28,7 @@ public class Keyboard implements KeyListener
         down = keys[KeyEvent.VK_S] || keys[KeyEvent.VK_DOWN];
         left = keys[KeyEvent.VK_A] || keys[KeyEvent.VK_LEFT];
         right = keys[KeyEvent.VK_D] || keys[KeyEvent.VK_RIGHT];
+        F1 = keys[KeyEvent.VK_F1];
     }
         
     public static boolean isKey(int keycode)

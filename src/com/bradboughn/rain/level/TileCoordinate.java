@@ -1,17 +1,19 @@
 
 package com.bradboughn.rain.level;
 
+import com.bradboughn.rain.level.tile.Tile;
+
 
 public class TileCoordinate 
 {
     
     private int x, y;
-    private final int TILE_SIZE = 16;
+
     
     public TileCoordinate (int x, int y) 
     {
-            this.x = x * TILE_SIZE;
-            this.y = y * TILE_SIZE;       
+            this.x = x * Tile.TILE_SIZE;
+            this.y = y * Tile.TILE_SIZE;       
     }
     
     public int getX()
@@ -24,15 +26,17 @@ public class TileCoordinate
         return y;
     }
     
+    
     public void setX(int x)
     {
-        this.x = x;
+        this.x = x * Tile.TILE_SIZE;
     }
     
     public void setY(int y)
     {
-        this.y = y;
+        this.y = y * Tile.TILE_SIZE;
     }
+    
     public int[] xy() 
     {
         int[] r = new int[2];

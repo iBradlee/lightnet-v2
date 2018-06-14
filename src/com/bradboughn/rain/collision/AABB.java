@@ -2,121 +2,163 @@
 package com.bradboughn.rain.collision;
 
 import com.bradboughn.rain.camera.Camera;
-import com.bradboughn.rain.gameobject.GameObject;
+import com.bradboughn.rain.entity.Entity;
+import com.bradboughn.rain.graphics.Sprite;
 
 public class AABB 
 {
-
+    private Entity go;
+    
     //CenterPos[0] is x center point, and centerPos[1] is the y center point;
-    private int[] centerPos;
+    private int centerX, centerY;
     //halfWidth[0] and [1] are halfwidth, and halfheight, respectively, for AABB
-    private int[] halfwidth;
+    private int halfwidth, halfheight;
     private int x,y;
     
-    //corner points. tl=top left; tr=top right; bl=bottom left; br=bottom right
-    private int[] tl, tr, bl, br;
+    //Left & right sides, on x axis. Top & bottom sides, for y axis
+    private int leftX, rightX, topY, bottomY;
     //Left, right sides (x axis of each); Top, bottom sides (y axis of each)
-    private int sideL, sideR, sideT, sideB;
     
     
+    public Entity.Type type;
+    
+    //@todo
+    //HOW TO FIX : PROJECTILE AABB'S, AND PROBABLY PARTICLES TOO. They both keep track of movement (x,y/xa,ya)
+    //with doubles. however, when making a bounding box, they use integers to create their boxes. 
+    public AABB(int x, int y, int width, int height, Entity go)
+    {
+        this.go = go;
+        halfwidth = width >> 1;
+        halfheight = height >> 1;
+        
+        //actual center of the go's sprite, regardless of aabb's width/height
+        centerX = x + go.getSprite().WIDTH >> 1;
+        centerY  = y + go.getSprite().HEIGHT >> 1;
+        
+        leftX = centerX - halfwidth;
+        rightX = centerX + halfwidth;
+        topY = centerY - halfheight;
+        bottomY = centerY + halfheight;
+        
+        this.x = leftX;
+        this.y = topY;
+
+        type = go.getType();
+    }
+    
+    //second constructor for constructiong niche AABB's that aren't attached to an object
     public AABB(int x, int y, int width, int height)
     {
         this.x = x;
         this.y = y;
-        halfwidth = new int[]{width>>1, height>>1};
-        centerPos = new int[]{x + halfwidth[0], y + halfwidth[1]};
-        tl = new int[] {x,y};
-        tr = new int[] {x + width, y};
-        bl = new int[] {x, y + height};
-        br = new int[] {x + width, y + height};
-//        tr = new int[] {
-//        System.out.println("x : " + x + ",      y : " + y);
-//        System.out.println("centerPos[0] : " + centerPos[0] + "        centerPos[1] : " + centerPos[1] );
+        halfwidth = width>>1;
+        halfheight = height>>1;
+        
+        centerX = x + halfwidth;
+        centerY = y + halfheight;
+        
+        leftX = centerX - halfwidth;
+        rightX = centerX + halfwidth;
+        topY = centerY - halfheight;
+        bottomY = centerY + halfheight;
     }
     
+    public void setAABBpos()
+    {
+        setCenter( go.getCenterX(), go.getCenterY());
+        setSides();
+    }
+    
+    //second setAABB method for niche AABB's that aren't attached to an object
     public void setAABBpos(int x, int y)
     {
-        setCenterPos(x + halfwidth[0], y + halfwidth[1]);
-        setCornerPoints();
+        setCenter(x + halfwidth, y + halfheight);
+        setSides();
     }
     
-    //Need to check later if Math.abs() is efficient enough, or if I should use unsigned bits to do it
     public static boolean checkAABBvAABB(AABB a, AABB b)
     {
         //x axis
-        if (Math.abs(a.centerPos[0] - b.centerPos[0]) > (a.halfwidth[0] + b.halfwidth[0])) return false;
+        if (Math.abs(a.centerX - b.centerX) > (a.halfwidth + b.halfwidth)) return false;
         //y axis
-        if (Math.abs(a.centerPos[1] - b.centerPos[1]) > (a.halfwidth[1] + b.halfwidth[1])) return false;
+        if (Math.abs(a.centerY - b.centerY) > (a.halfheight + b.halfheight)) return false;
         return true;
     }
     
-    public void setCornerPoints()
+    //keep private. since centerX isn't updated 'til it's set method is called in setAABBpos(), 
+    //this could cause issues if unaccounted for.
+    private void setSides()
     {
-        tl[0] = x;
-        tl[1] = y;
-        
-        tr[0] = x + halfwidth[0]<<1;
-        tr[1] = y;
-        
-        bl[0] = x;
-        bl[1] = y + halfwidth[1]<<1;
-        
-        br[0] = x + halfwidth[0]<<1;
-        br[1] = y + halfwidth[1]<<1;
-    }
-    
-    public void updateSides()
-    {
-        
+        leftX = centerX - halfwidth;
+        rightX = centerX + halfwidth;
+        topY = centerY - halfheight;
+        bottomY = centerY + halfheight;
     }
 
-    public void setCenterPos(int x, int y)
+    public void setCenter(int x, int y)
     {
-        centerPos[0] = x;
-        centerPos[1] = y;
+        centerX = x;
+        centerY = y;
     }
     
-    public int[] getCenterPos()
+    public void renderAABB()
     {
-        return centerPos;
+        Camera.renderSprite(leftX, topY, new Sprite(halfwidth<<1, halfheight<<1, 0xff0fca0f), true);
+    }
+    
+    public int getCenterX()
+    {
+        return centerX;
+    }
+    
+    public int getCenterY()
+    {
+        return centerY;
     }
     
     public int getX()
     {
-        return x;
+        return leftX;
     }
 
     public int getY()
     {
-        return y;
+        return  topY;
     }
 
-    public int[] getHalfwidth()
+    public int getHalfwidth()
     {
         return halfwidth;
     }
-
-    public int[] getTl()
-    {
-        return tl;
-    }
-
-    public int[] getTr()
-    {
-        return tr;
-    }
-
-    public int[] getBl()
-    {
-        return bl;
-    }
-
-    public int[] getBr()
-    {
-        return br;
-    }
     
-    
-    
+    public int getHalfheight()
+    {
+        return halfheight;
+    }
+
+    public int getLeftX()
+    {
+        return leftX;
+    }
+
+    public int getRightX()
+    {
+        return rightX;
+    }
+
+    public int getTopY()
+    {
+        return topY;
+    }
+
+    public int getBottomY()
+    {
+        return bottomY;
+    }
+      
+    public Entity getGo()
+    {
+        return go;
+    }
     
 }

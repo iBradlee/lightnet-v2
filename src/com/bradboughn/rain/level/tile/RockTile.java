@@ -18,9 +18,13 @@ public class RockTile extends Tile {
         super(sprite);
     }
     
+    public RockTile(Sprite sprite, int x, int y) {
+        super(sprite, x, y);
+    }
+    
     public RockTile()
     {
-        sprite = Sprite.grassRock;
+        sprite = Sprite.SPAWN_GRASS_ROCK;
     }
     
     public boolean isSolid() {

@@ -1,5 +1,5 @@
 
-package com.bradboughn.rain.gameobject.items;
+package com.bradboughn.rain.entity.items;
 
 public enum WizardItem {
     

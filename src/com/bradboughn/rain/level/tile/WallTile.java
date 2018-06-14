@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.bradboughn.rain.level.tile.spawn_level;
+package com.bradboughn.rain.level.tile;
 
 import com.bradboughn.rain.graphics.Sprite;
 import com.bradboughn.rain.level.tile.Tile;
@@ -12,17 +12,25 @@ import com.bradboughn.rain.level.tile.Tile;
  *
  * @author Brad
  */
-public class SpawnWoodFloorTile extends Tile 
+public class WallTile extends Tile 
 {
     
-    public SpawnWoodFloorTile(Sprite sprite) 
+    public WallTile(Sprite sprite) 
     {
         super(sprite);
     }
     
-    public SpawnWoodFloorTile()
-    {
-        sprite = Sprite.spawn_woodFloor;
+    public WallTile(Sprite sprite, int x, int y) {
+        super(sprite, x, y);
     }
     
+    public WallTile()
+    {
+        sprite = Sprite.SPAWN_WALL_STONE;
+    }
+    
+    public boolean isSolid() 
+    {
+        return true;
+    }
 }

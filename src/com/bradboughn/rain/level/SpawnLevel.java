@@ -5,8 +5,7 @@
  */
 package com.bradboughn.rain.level;
 
-import com.bradboughn.rain.level.tile.GrassTile;
-import com.bradboughn.rain.level.tile.Tile;
+import com.bradboughn.rain.entity.mob.Dummy;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -39,7 +38,11 @@ public class SpawnLevel extends Level
         catch (IOException e) 
         {
             e.printStackTrace();
-        } 
+        }
+        add(new Dummy(17, 24));
+        add(new Dummy(18, 25));
+        add(new Dummy(19, 25));
+        add(new Dummy(20, 25));
     }
     
     //Grass = 0x00FF00    
