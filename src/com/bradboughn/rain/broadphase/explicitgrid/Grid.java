@@ -319,7 +319,6 @@ public class Grid
     {
         int xa = (int)x - Camera.getOffsetX();
         int ya = (int)y - Camera.getOffsetY();
-        System.out.println("x:"+x + ", y:" + y + "\nxa:" + xa + ", ya:" + ya);
         return cellMap.get(new CellCoord(xa/cellSize,ya/cellSize));
     }
     

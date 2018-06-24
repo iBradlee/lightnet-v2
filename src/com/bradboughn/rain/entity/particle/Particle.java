@@ -15,7 +15,6 @@ public class Particle extends DynamicEntity{
     
     private int life;
     //zz can be thought of as gravity. za is change in zz per update.
-    protected double xx, yy, zz;
     protected double xa, ya, za;
     
     public Particle(double x, double y, int life)
@@ -28,7 +27,8 @@ public class Particle extends DynamicEntity{
         aabb = new AABB(x,y, getSprite().WIDTH, getSprite().HEIGHT, this);
         this.xa = rand.nextGaussian();
         this.ya = rand.nextGaussian() - 0.5;
-        this.zz = 1.0;
+//        this.zz = 1.0;
+        za = 1.0;
     }
     
  
@@ -78,19 +78,19 @@ public class Particle extends DynamicEntity{
     
     public void render()
     {
-            Camera.renderSprite((int)xx, (int)yy , getSprite(), true);
+            Camera.renderSprite((int)centerX, (int)centerY , getSprite(), true);
     }
 
     protected void updateXs(double xa)
     {
         x += xa;
-        centerX = (int)x + sprHalfWidth;
+        centerX = x + sprHalfWidth;
     }
     
     protected void updateYs(double ya)
     {
         y += ya;
-        centerY = (int)y + sprHalfHeight;
+        centerY = y + sprHalfHeight;
     }
     
 }

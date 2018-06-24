@@ -52,18 +52,14 @@ public abstract class Entity
         GridCell temp = Grid.getCellAt(centerX, centerY);
         if (temp != null)
         {
-            System.out.println("temp = " + temp.getX() + ", " + temp.getY());
             occupiedCell = temp;
             temp.addToInhabitants(this);
             Grid.addToActiveCells(temp);
         }
         else 
         {
-            System.out.println("not a cell here");
             //because boradphase runs AFTER level's update of all entities, i need to remove this from level 
             //entity list as well as add it into level offscreen list immediately
-            int camx = Camera.getOffsetX();
-            int camy = Camera.getOffsetY();
             level.removeFromEntities(this);
             level.addToOffScreen(this);
             setRemovedTrue();

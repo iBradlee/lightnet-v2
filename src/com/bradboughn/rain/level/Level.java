@@ -384,25 +384,6 @@ public class Level
         return collide;
     }
     
-    //Render method is finding all 4 sides, and the current position on the map, of the screen, then renders each tile individually
-//    public void render(int xScroll,int yScroll)
-//    {      
-//        Screen.setOffset(xScroll, yScroll);                          //setting/updating offset in our screen, based on player movement
-//        int x0 = xScroll >> 4; // left side                          >>4, is same as divided by 16. This has it check/render every tile, instead of pixels.
-//        int x1 = (xScroll + Screen.getWidth() + 16) >> 4; // right side        >>4 puts numbers in tile precision
-//        int y0 = yScroll >> 4;//top side            
-//        int y1 = (yScroll + Screen.getHeight() + 16) >> 4; // bottom side || +16 adds another tile to fully cover screen.
-//        
-//        for (int y = y0; y < y1; y++) 
-//        {
-//            for (int x = x0; x < x1; x++) 
-//            {
-//                getTile(x,y).render(x, y);
-//                // x and y grab every tile on screen currently, by taking the x0, y0 variable
-//            }    
-//        }   
-//            renderEntities();
-//    }
     //Entity functions
     //THERE IS A SMALL ISSUE WITH THE WAY I ADD ENTITIES, AND MORE IMPORTANTLY ADD BACK INTO A LEVEL LIST:
     //OBJECTS ARE INITIALIZED EVERY SINGLE TIME THEY'RE ADDED. NOW THAT I REMOVE ENTITIES WHEN THEY'RE

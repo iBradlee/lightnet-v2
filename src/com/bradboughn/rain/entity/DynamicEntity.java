@@ -29,10 +29,6 @@ public abstract class DynamicEntity extends Entity
         if (xa < -Grid.getBufferSizePixel() || xa > Grid.gridWidth + Grid.bufferSize_Pixel || 
             ya < -Grid.bufferSize_Pixel || ya > Grid.gridHeight + Grid.bufferSize_Pixel) 
         {
-            System.out.println("Outside of explicit grid! Will be added to off-screen entity list!");
-            //need to build in better functionality for handling off-screen entities. this crashes atm,
-            //but I like the concept of a seperate custom class used as a container for these objects,
-            //to be added back into update/rendering loops when/if they come back onscreen again!
             setOffScreenTrue();
             return null;
         }

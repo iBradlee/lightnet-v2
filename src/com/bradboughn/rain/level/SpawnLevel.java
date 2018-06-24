@@ -40,9 +40,9 @@ public class SpawnLevel extends Level
         }
         //this one, at 40<<4 Y coord, is the one messing up
         add(new Dummy(20<<4,40<<4));
-//        add(new Dummy(20<<4, 20<<4));
-//        add(new Dummy(20<<4, 20<<4));
-//        add(new Dummy(20<<4, 20<<4));
+        add(new Dummy(20<<4, 20<<4));
+        add(new Dummy(20<<4, 20<<4));
+        add(new Dummy(20<<4, 20<<4));
     }
     
     //Grass = 0x00FF00    

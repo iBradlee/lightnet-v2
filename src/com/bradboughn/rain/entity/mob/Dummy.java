@@ -64,7 +64,6 @@ public class Dummy extends Mob {
         }
         //want dummy ghosts to always play animation, since it looks like an idle animation as well
         walking = true;
-        System.out.println("offscreen: " +  this.isOffScreen());
         updateAnimation();
         updateGridCells();
     }
