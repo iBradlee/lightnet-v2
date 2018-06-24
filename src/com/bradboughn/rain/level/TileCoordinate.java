@@ -1,7 +1,7 @@
 
 package com.bradboughn.rain.level;
 
-import com.bradboughn.rain.level.tile.Tile;
+import com.bradboughn.rain.entity.tile.Tile;
 
 
 public class TileCoordinate 

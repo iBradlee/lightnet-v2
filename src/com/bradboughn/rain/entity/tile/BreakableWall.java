@@ -3,34 +3,41 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.bradboughn.rain.level.tile;
+package com.bradboughn.rain.entity.tile;
 
 import com.bradboughn.rain.graphics.Sprite;
-import com.bradboughn.rain.level.tile.Tile;
+import com.bradboughn.rain.entity.tile.Tile;
 
 /**
  *
  * @author Brad
  */
-public class WallTile extends Tile 
+public class BreakableWall extends Tile
 {
     
-    public WallTile(Sprite sprite) 
+    public BreakableWall(Sprite sprite) 
     {
         super(sprite);
     }
     
-    public WallTile(Sprite sprite, int x, int y) {
+    public BreakableWall(Sprite sprite, int x, int y) {
         super(sprite, x, y);
     }
     
-    public WallTile()
+    public BreakableWall()
     {
-        sprite = Sprite.SPAWN_WALL_STONE;
+        sprite = Sprite.SPAWN_HEDGE;
     }
     
-    public boolean isSolid() 
+    public boolean isSolid()
+    {
+        return true; 
+    }
+    
+    public boolean breakable()
     {
         return true;
     }
+    
 }
+

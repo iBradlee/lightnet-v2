@@ -3,12 +3,13 @@ package com.bradboughn.rain.entity.projectile;
 
 import com.bradboughn.rain.camera.Camera;
 import com.bradboughn.rain.collision.AABB;
+import com.bradboughn.rain.entity.DynamicEntity;
 import com.bradboughn.rain.entity.Entity;
 import com.bradboughn.rain.entity.spawner.Spawner;
 import com.bradboughn.rain.entity.spawner.ParticleSpawner;
 import com.bradboughn.rain.graphics.Sprite;
 
-public abstract class Projectile extends Entity 
+public abstract class Projectile extends DynamicEntity 
 {
     /*@todo
     *   need to check all corners of projectile, for collision. As of now, even if a projectile "hits"
@@ -30,7 +31,9 @@ public abstract class Projectile extends Entity
     
     public Projectile(double x, double y, double slope)
     {
+        super(x,y);
         setSprite(Sprite.VOID_SPRITE);
+        value = "projectile";
         sprHalfWidth = getSprite().WIDTH>>1;
         sprHalfHeight = getSprite().HEIGHT>>1;
         type = Type.PROJECTILE;
@@ -89,7 +92,7 @@ public abstract class Projectile extends Entity
             if (collisionCheck[0] == 1)
             {
                 setRemovedTrue();
-                level.add(new ParticleSpawner(centerX, centerY, Spawner.Type.PARTICLE_WIZ, 35, 25, level));
+                Spawner partSpawner = new ParticleSpawner(centerX, centerY, Spawner.Type.PARTICLE_WIZ, 35, 25, level);
             }
         }
         tick = 0;

@@ -9,31 +9,34 @@ public class AABB
 {
     private Entity go;
     
-    //CenterPos[0] is x center point, and centerPos[1] is the y center point;
-    private int centerX, centerY;
-    //halfWidth[0] and [1] are halfwidth, and halfheight, respectively, for AABB
+    private double x,y;
+    private double centerX, centerY;
     private int halfwidth, halfheight;
-    private int x,y;
     
     //Left & right sides, on x axis. Top & bottom sides, for y axis
-    private int leftX, rightX, topY, bottomY;
+    private double leftX, rightX, topY, bottomY;
     //Left, right sides (x axis of each); Top, bottom sides (y axis of each)
     
     
     public Entity.Type type;
     
-    //@todo
-    //HOW TO FIX : PROJECTILE AABB'S, AND PROBABLY PARTICLES TOO. They both keep track of movement (x,y/xa,ya)
-    //with doubles. however, when making a bounding box, they use integers to create their boxes. 
-    public AABB(int x, int y, int width, int height, Entity go)
+    /**
+     * 
+     * @param x x coordinate
+     * @param y y coordinate
+     * @param width width of object/entity
+     * @param height height of object/entity
+     * @param go Entity that this AABB belongs to
+     */
+    public AABB(double x, double y, int width, int height, Entity go)
     {
         this.go = go;
         halfwidth = width >> 1;
         halfheight = height >> 1;
         
         //actual center of the go's sprite, regardless of aabb's width/height
-        centerX = x + go.getSprite().WIDTH >> 1;
-        centerY  = y + go.getSprite().HEIGHT >> 1;
+        centerX = x + go.getSprite().WIDTH /2;
+        centerY  = y + go.getSprite().HEIGHT /2;
         
         leftX = centerX - halfwidth;
         rightX = centerX + halfwidth;
@@ -46,7 +49,14 @@ public class AABB
         type = go.getType();
     }
     
-    //second constructor for constructiong niche AABB's that aren't attached to an object
+    //second constructor for constructiong niche/static AABB's that aren't attached to an object
+    /**
+     * 
+     * @param x x coordinate
+     * @param y y coordinate
+     * @param width width of object/entity
+     * @param height height of object/entity
+     */
     public AABB(int x, int y, int width, int height)
     {
         this.x = x;
@@ -95,7 +105,7 @@ public class AABB
         bottomY = centerY + halfheight;
     }
 
-    public void setCenter(int x, int y)
+    public void setCenter(double x, double y)
     {
         centerX = x;
         centerY = y;
@@ -103,25 +113,25 @@ public class AABB
     
     public void renderAABB()
     {
-        Camera.renderSprite(leftX, topY, new Sprite(halfwidth<<1, halfheight<<1, 0xff0fca0f), true);
+        Camera.renderSprite((int)leftX, (int)topY, new Sprite(halfwidth<<1, halfheight<<1, 0xff0fca0f), true);
     }
     
-    public int getCenterX()
+    public double getCenterX()
     {
         return centerX;
     }
     
-    public int getCenterY()
+    public double getCenterY()
     {
         return centerY;
     }
     
-    public int getX()
+    public double getX()
     {
         return leftX;
     }
 
-    public int getY()
+    public double getY()
     {
         return  topY;
     }
@@ -136,22 +146,22 @@ public class AABB
         return halfheight;
     }
 
-    public int getLeftX()
+    public double getLeftX()
     {
         return leftX;
     }
 
-    public int getRightX()
+    public double getRightX()
     {
         return rightX;
     }
 
-    public int getTopY()
+    public double getTopY()
     {
         return topY;
     }
 
-    public int getBottomY()
+    public double getBottomY()
     {
         return bottomY;
     }

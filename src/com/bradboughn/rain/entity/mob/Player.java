@@ -24,7 +24,6 @@ public class Player extends Mob
     private int fireRate = 0;
     
     //GOES INTO WALLS WHEN SPEED GOES PAST 16!
-    private int speed = 2;
     private int topSpeed = 1;
     private double acceleration = topSpeed/8.0;
     private double accumAcceleration = 0.0;
@@ -51,21 +50,21 @@ public class Player extends Mob
 //        this.key = input;
 //    }
     
-    public Player (int x, int y) 
+    public Player (double x, double y) 
     {
+        super(x,y);
         type = Type.PLAYER;
+        value = "player";
         setSprite(Sprite.DEFAULT_PLAYER);
         animSprite = anim_down;
         anim_up = new AnimatedSprite(32,32, SpriteSheet.player_up);
         anim_right = new AnimatedSprite(32,32, SpriteSheet.player_right);
         anim_down = new AnimatedSprite(32,32, SpriteSheet.player_down);
         anim_left = new AnimatedSprite(32,32, SpriteSheet.player_left);
-        this.x = x;
-        this.y = y;
-        setCenter();
 
         fireRate = WizardProjectile.FIRE_RATE;
         
+        speed = 2;
         aabb = new AABB(x , y , 16 , 16, this);
     }
     
@@ -109,7 +108,7 @@ public class Player extends Mob
     {
 //        int xx = x - 16;
 //        int yy = y - 16;
-        Camera.renderSprite(x, y, getSprite(), true);
+        Camera.renderSprite((int)x, (int)y, getSprite(), true);
         aabb.setAABBpos();
         aabb.renderAABB();
 

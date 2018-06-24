@@ -1,13 +1,13 @@
 
 package com.bradboughn.rain.entity.spawner;
 
+import com.bradboughn.rain.entity.DynamicEntity;
 import com.bradboughn.rain.entity.Entity;
-import com.bradboughn.rain.entity.particle.Particle;
 import com.bradboughn.rain.level.Level;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Spawner extends Entity{
+public class Spawner extends DynamicEntity{
     
     private List<Entity> entities = new ArrayList();
     
@@ -18,11 +18,15 @@ public class Spawner extends Entity{
     
     private Type type;
     
-    public Spawner(int x, int y, Type type, int amount, Level level)
+    public Spawner(double x, double y, Type type, int amount, Level level)
     {
-        this.x = x; 
-        this.y = y;
+        super(x,y);
         this.type = type;
         this.level = level;
+    }
+    
+    public void update()
+    {
+        
     }
 }

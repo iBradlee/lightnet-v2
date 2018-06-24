@@ -3,30 +3,29 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.bradboughn.rain.level.tile;
+package com.bradboughn.rain.entity.tile;
 
+import com.bradboughn.rain.graphics.Screen;
 import com.bradboughn.rain.graphics.Sprite;
-import com.bradboughn.rain.level.tile.Tile;
 
 /**
  *
  * @author Brad
  */
-public class FloorTile extends Tile 
-{
-    
-    public FloorTile(Sprite sprite) 
-    {
+public class FlowerTile extends Tile {
+
+    public FlowerTile(Sprite sprite) {
         super(sprite);
     }
     
-    public FloorTile(Sprite sprite, int x, int y) {
+    public FlowerTile(Sprite sprite, int x, int y) {
         super(sprite, x, y);
     }
     
-    public FloorTile()
+    public FlowerTile()
     {
-        sprite = Sprite.SPAWN_FLOOR_WOOD;
+        sprite = Sprite.GRASS_FLOWER;
     }
     
+
 }

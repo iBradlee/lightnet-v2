@@ -2,7 +2,7 @@
 package com.bradboughn.rain.graphics;
 
 import com.bradboughn.rain.entity.mob.Player;
-import com.bradboughn.rain.level.tile.Tile;
+import com.bradboughn.rain.entity.tile.Tile;
 import java.util.Random;
 
 public class Screen     

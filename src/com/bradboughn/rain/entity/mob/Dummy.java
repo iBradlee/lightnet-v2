@@ -15,10 +15,9 @@ public class Dummy extends Mob {
     private double xa = rand.nextGaussian(); 
     private double ya = rand.nextGaussian();
     
-    public Dummy(int spawnTileX, int spawnTileY)
+    public Dummy(double x, int y)
     {
-        this.x = spawnTileX << 4;
-        this.y = spawnTileY << 4;
+        super(x,y);
         setSprite(Sprite.DEFAULT_MOB_DUMMY);
         animSprite = anim_up;
         //this is only for my janky animated sprite without a decent way to change animation 
@@ -35,7 +34,9 @@ public class Dummy extends Mob {
         
 //        speed = rand.nextInt(2) + 1;
         speed = 0;
+        value = "this is a fking dummy yo!";
     }
+    
     int ticks = 0;
     public void update()
     {
@@ -63,16 +64,15 @@ public class Dummy extends Mob {
         }
         //want dummy ghosts to always play animation, since it looks like an idle animation as well
         walking = true;
+        System.out.println("offscreen: " +  this.isOffScreen());
         updateAnimation();
         updateGridCells();
-
-            
     }
 
     public void render()
     {
 //        Camera.renderSprite(aabb.getLeftX(), aabb.getTopY(), new Sprite(aabb.getHalfwidth()<<1, aabb.getHalfheight()<<1, 0xff0f0f0f), true);
-        Camera.renderSprite(x, y, getSprite(), true);
+        Camera.renderSprite((int)x, (int)y, getSprite(), true);
     }
 
 }

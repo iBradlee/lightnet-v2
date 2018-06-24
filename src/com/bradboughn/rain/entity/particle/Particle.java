@@ -1,12 +1,14 @@
 
 package com.bradboughn.rain.entity.particle;
 
+import static com.bradboughn.rain.broadphase.explicitgrid.Grid.level;
 import com.bradboughn.rain.camera.Camera;
 import com.bradboughn.rain.collision.AABB;
-import com.bradboughn.rain.entity.Entity;
+import com.bradboughn.rain.entity.DynamicEntity;
+import com.bradboughn.rain.entity.Entity.Type;
 import com.bradboughn.rain.graphics.Sprite;
 
-public class Particle extends Entity{
+public class Particle extends DynamicEntity{
     //@todo are we also creating x "amount" of arrays, as well as particles? even tho we only use 1 per
     //call of the original particle? should i just create a "sub-particle" class, to spawn all others?
 
@@ -16,19 +18,16 @@ public class Particle extends Entity{
     protected double xx, yy, zz;
     protected double xa, ya, za;
     
-    public Particle(int x, int y, int life)
+    public Particle(double x, double y, int life)
     {
+        super(x,y);
         type = Type.PARTICLE;
-        this.x = x;
-        this.y = y;
-        this.xx = x;
-        this.yy = y;
-        this.life = rand.nextInt(life) + life;
+        this.life = rand.nextInt(5) + life;
         setSprite(new Sprite(rand.nextInt(4),rand.nextInt(4),0xffffff00)); 
         
         aabb = new AABB(x,y, getSprite().WIDTH, getSprite().HEIGHT, this);
         this.xa = rand.nextGaussian();
-        this.ya = rand.nextGaussian();
+        this.ya = rand.nextGaussian() - 0.5;
         this.zz = 1.0;
     }
     
@@ -59,13 +58,14 @@ public class Particle extends Entity{
         
 
             
-        if (!level.partTileCollision(xx, yy, xa, ya, aabb))
+        if (!level.partTileCollision(x, y, xa, ya, aabb))
         {
             //za is simulating increase in gravity here
-            za += 0.3;
-            za/= 3;
-            xa /= 3;
-            ya /= 3;
+//            za += 0.3;
+//            za/= 3;
+//            xa /= 3;
+//            ya /= 3;
+            za -= 0.1;
           
             updateXs(xa);
             updateYs(ya - za);
@@ -83,14 +83,14 @@ public class Particle extends Entity{
 
     protected void updateXs(double xa)
     {
-        xx += xa;
-        centerX = (int)xx + sprHalfWidth;
+        x += xa;
+        centerX = (int)x + sprHalfWidth;
     }
     
     protected void updateYs(double ya)
     {
-        yy += ya;
-        centerY = (int)yy + sprHalfHeight;
+        y += ya;
+        centerY = (int)y + sprHalfHeight;
     }
     
 }

@@ -1,15 +1,17 @@
 
 package com.bradboughn.rain.level;
 
+import com.bradboughn.rain.broadphase.explicitgrid.Grid;
 import com.bradboughn.rain.camera.Camera;
 import com.bradboughn.rain.collision.AABB;
+import com.bradboughn.rain.entity.DynamicEntity;
 import com.bradboughn.rain.entity.Entity;
 import com.bradboughn.rain.entity.mob.Dummy;
 import com.bradboughn.rain.entity.particle.Particle;
 import com.bradboughn.rain.entity.projectile.Projectile;
-import com.bradboughn.rain.graphics.Screen;
 import com.bradboughn.rain.input.Keyboard;
-import com.bradboughn.rain.level.tile.Tile;
+import com.bradboughn.rain.entity.tile.Tile;
+import com.bradboughn.rain.entity.tile.TileMap;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +20,10 @@ public class Level
 {
     
     protected int width, height;
+    protected TileMap tileMap;
+    //tilesInt I believe is only used for generating a procedural map
     protected int[] tilesInt;
+    //tiles can be removed after TileMap is fully integrated
     protected int[] tiles;
     //@todo Would like to have an ArrayList that holds lists. This would handle entities that have
     //their own arraylist, in order to keep track of the parent of some of these added entities/lists.
@@ -34,15 +39,16 @@ public class Level
     
     public Level(int width, int height)
     {
+        Grid.initGrid(this);
         this.width = width;
         this.height = height;
         tilesInt = new int[width * height];
         generateLevel();
-        
     }
     
     public Level(String path)
     {
+        Grid.initGrid(this);
         loadLevel(path);
         generateLevel();
         
@@ -65,8 +71,8 @@ public class Level
         {
             add(new Dummy(20,27));
         }
-        updateEntities();
         updateOffScreenEntities();
+        updateEntities();
 //        System.out.println(lvlProjectiles.size());
     }
     
@@ -99,15 +105,15 @@ public class Level
         if (dx != 0.0)
         {
             //get tiles in which top/bottom side of AABB fall in, to see how many y axis rows need to be checked
-            int top = aabb.getTopY()/Tile.TILE_SIZE;
-            int bottom = aabb.getBottomY()/Tile.TILE_SIZE;
+            int top = (int)aabb.getTopY()/Tile.TILE_SIZE;
+            int bottom = (int)aabb.getBottomY()/Tile.TILE_SIZE;
             
             if (dx < 0)
             {
                 //get starting scan location/tile for x axis (starting is forward-facing edge)
-                int forwardEdge = aabb.getLeftX()/Tile.TILE_SIZE;
+                int forwardEdge = (int)aabb.getLeftX()/Tile.TILE_SIZE;
                 //get ending scan tile for x axis (check how many col dx will reach, if any more than starting)
-                int endCol = (aabb.getLeftX() + (int)dx)/Tile.TILE_SIZE;
+                int endCol = ((int)aabb.getLeftX() + (int)dx)/Tile.TILE_SIZE;
 //                System.out.println("forward : " + forwardEdge + ",    endCol : " + endCol);
 
                 //loop thru each x axis column, then for each, loop thru all y axis rows the AABB could collide with
@@ -141,8 +147,8 @@ public class Level
                 //in which it's movement is called. It must still think it's moving? Could be that new
                 //updateX,updateY methods...
                 
-                int forwardEdge = aabb.getRightX()/Tile.TILE_SIZE;
-                int endCol = (aabb.getRightX() + (int)dx)/Tile.TILE_SIZE;
+                int forwardEdge = (int)aabb.getRightX()/Tile.TILE_SIZE;
+                int endCol = ((int)aabb.getRightX() + (int)dx)/Tile.TILE_SIZE;
 
                 for (int xCol = forwardEdge ; xCol <= endCol; xCol++)
                 {
@@ -169,13 +175,13 @@ public class Level
         
         if (dy != 0.0)
         {
-            int left = aabb.getLeftX()/Tile.TILE_SIZE;
-            int right = aabb.getRightX()/Tile.TILE_SIZE;
+            int left = (int)aabb.getLeftX()/Tile.TILE_SIZE;
+            int right = (int)aabb.getRightX()/Tile.TILE_SIZE;
             
             if (dy < 0)
             {
-                int forwardEdge = aabb.getTopY()/Tile.TILE_SIZE;
-                int endRow = (aabb.getTopY() + (int)dy)/Tile.TILE_SIZE;
+                int forwardEdge = (int)aabb.getTopY()/Tile.TILE_SIZE;
+                int endRow = ((int)aabb.getTopY() + (int)dy)/Tile.TILE_SIZE;
                 for (int yRow = forwardEdge; yRow >= endRow; yRow--)
                 {
                     for (int xCol = left; xCol <= right; xCol++)
@@ -196,8 +202,8 @@ public class Level
             }
             else
             {
-                int forwardEdge = aabb.getBottomY()/Tile.TILE_SIZE;
-                int endRow = (aabb.getBottomY() + (int)dy)/Tile.TILE_SIZE;
+                int forwardEdge = (int)aabb.getBottomY()/Tile.TILE_SIZE;
+                int endRow = ((int)aabb.getBottomY() + (int)dy)/Tile.TILE_SIZE;
                 
                 for (int yRow = forwardEdge; yRow <= endRow; yRow++)
                 {
@@ -238,15 +244,15 @@ public class Level
         if (dx != 0)
         {
             //get tiles in which top/bottom side of AABB fall in, to see how many y axis rows need to be checked
-            int top = aabb.getTopY()/Tile.TILE_SIZE;
-            int bottom = aabb.getBottomY()/Tile.TILE_SIZE;
+            int top = (int)aabb.getTopY()/Tile.TILE_SIZE;
+            int bottom = (int)aabb.getBottomY()/Tile.TILE_SIZE;
             
             if (dx < 0)
             {
                 //get starting scan location/tile for x axis (starting is forward-facing edge)
-                int forwardEdge = aabb.getLeftX()/Tile.TILE_SIZE;
+                int forwardEdge = (int)aabb.getLeftX()/Tile.TILE_SIZE;
                 //get ending scan tile for x axis (check how many col dx will reach, if any more than starting)
-                int endCol = (aabb.getLeftX() + (int)dx)/Tile.TILE_SIZE;
+                int endCol = ((int)aabb.getLeftX() + (int)dx)/Tile.TILE_SIZE;
 //                System.out.println("forward : " + forwardEdge + ",    endCol : " + endCol);
 
                 //loop thru each x axis column, then for each, loop thru all y axis rows the AABB could collide with
@@ -259,7 +265,7 @@ public class Level
                             //create temp aabb for tile which is solid, and in our path
                             AABB tileAabb = new AABB(xCol*Tile.TILE_SIZE, yRow*Tile.TILE_SIZE, Tile.TILE_SIZE, Tile.TILE_SIZE);
                             Camera.setVisAABB(tileAabb);
-                            int deltaX = tileAabb.getRightX() - aabb.getLeftX();
+                            int deltaX = (int)(tileAabb.getRightX() - aabb.getLeftX());
                             //if difference between tile aabb's right side, and main aabb's left side
                             //is shorter than dx (our target movement), then store shortest distance
                             //in "newMovement", and return.
@@ -281,8 +287,8 @@ public class Level
                 //in which it's movement is called. It must still think it's moving? Could be that new
                 //updateX,updateY methods...
                 
-                int forwardEdge = aabb.getRightX()/Tile.TILE_SIZE;
-                int endCol = (aabb.getRightX() + (int)dx)/Tile.TILE_SIZE;
+                int forwardEdge = (int)aabb.getRightX()/Tile.TILE_SIZE;
+                int endCol = ((int)aabb.getRightX() + (int)dx)/Tile.TILE_SIZE;
 
                 for (int xCol = forwardEdge ; xCol <= endCol; xCol++)
                 {
@@ -297,7 +303,7 @@ public class Level
                             //trying to move up/down. PRETTY SURE it's the sprite not having an actual
                             //center point, since it's 36x36, and thusly, the aabb's center (based on sprite center)
                             //is also skewed a bit to one side (the left i believe)
-                            int deltaX = tileAabb.getLeftX() - aabb.getRightX();
+                            int deltaX = (int)(tileAabb.getLeftX() - aabb.getRightX());
                             collisionDetectionResolution[0] = 1;
                             collisionDetectionResolution[1] = deltaX < dx ? deltaX : dx;  
                         }
@@ -308,13 +314,13 @@ public class Level
         if (dy != 0)
         {
 
-            int left = aabb.getLeftX()/Tile.TILE_SIZE;
-            int right = aabb.getRightX()/Tile.TILE_SIZE;
+            int left = (int)aabb.getLeftX()/Tile.TILE_SIZE;
+            int right = (int)aabb.getRightX()/Tile.TILE_SIZE;
             
             if (dy < 0)
             {
-                int forwardEdge = aabb.getTopY()/Tile.TILE_SIZE;
-                int endRow = (aabb.getTopY() + (int)dy)/Tile.TILE_SIZE;
+                int forwardEdge = (int)aabb.getTopY()/Tile.TILE_SIZE;
+                int endRow = ((int)aabb.getTopY() + (int)dy)/Tile.TILE_SIZE;
                 
                 for (int yRow = forwardEdge; yRow >= endRow; yRow--)
                 {
@@ -324,7 +330,7 @@ public class Level
                         {
                             AABB tileAabb = new AABB(xCol*Tile.TILE_SIZE, yRow*Tile.TILE_SIZE, Tile.TILE_SIZE, Tile.TILE_SIZE);
                             Camera.setVisAABB(tileAabb);
-                            int deltaY = tileAabb.getBottomY() - aabb.getTopY();
+                            int deltaY = (int)(tileAabb.getBottomY() - aabb.getTopY());
                             
                             collisionDetectionResolution[0] = 1;
                             collisionDetectionResolution[2] = deltaY > dy ? deltaY : dy; 
@@ -334,8 +340,8 @@ public class Level
             }
             else
             {
-                int forwardEdge = aabb.getBottomY()/Tile.TILE_SIZE;
-                int endRow = (aabb.getBottomY() + (int)dy)/Tile.TILE_SIZE;
+                int forwardEdge = (int)aabb.getBottomY()/Tile.TILE_SIZE;
+                int endRow = ((int)aabb.getBottomY() + (int)dy)/Tile.TILE_SIZE;
                 
                 for (int yRow = forwardEdge; yRow <= endRow; yRow++)
                 {
@@ -349,7 +355,7 @@ public class Level
                             //it's bottom edge is inside the wall, more than likely because of the 
                             //fact that a 36x36 sprite has no true center point, and bc of that, the
                             //aabb has no true center point either
-                            int deltaY = tileAabb.getTopY() - aabb.getBottomY();
+                            int deltaY = (int)(tileAabb.getTopY() - aabb.getBottomY());
                             
                             collisionDetectionResolution[0] = 1;
                             collisionDetectionResolution[2] = deltaY < dy ? deltaY : dy; 
@@ -410,18 +416,32 @@ public class Level
     public void add(Entity e)
     {
         e.init(this);
-        if (e instanceof Particle)
+        if (Grid.isInGridBounds(e))
         {
-            particles.add((Particle)e);
+            if (e instanceof Particle)
+            {
+                particles.add((Particle)e);
+            }
+            else if (e instanceof Projectile)
+            {
+                projectiles.add((Projectile)e);
+            }
+            else
+            {
+                entities.add(e);
+            }    
         }
-        else if (e instanceof Projectile)
+        else 
         {
-            projectiles.add((Projectile)e);
+            e.setOffScreenTrue();
+            e.setRemovedTrue();
+            addToOffScreen(e);
         }
-        else
-        {
-            entities.add(e);
-        }
+    }
+    
+    public void addToEntities(Entity e)
+    {
+        entities.add(e);
     }
     
     public void addToOffScreen(Entity e)
@@ -429,10 +449,20 @@ public class Level
         offScreenEntities.add(e);
     }
     
+    public void removeFromEntities(Entity e)
+    {
+        entities.remove(e);
+    }
+    
+    public void removeFromOffScreen(Entity e)
+    {
+        offScreenEntities.remove(e);
+    }
+    
     //only difference is this doesn't run init(), because Player already ran init() in main game class
     //because of that, it inits Player, which adds level, and calls level.add(this), which then tries
     //to initialize again, and goes 'round and 'round.
-    public void addPlayer(Entity go)
+    public void addPlayer(DynamicEntity go)
     {
         entities.add(go);
     }
@@ -443,7 +473,13 @@ public class Level
         //are removed are replaced by entities which you have already checked.
         for (int i = entities.size()-1 ; i >= 0; i--)
         {
-            if (entities.get(i).isRemoved()) entities.remove(i);
+            if (entities.get(i).isOffScreen()) 
+            {
+                entities.get(i).setRemovedTrue();
+                addToOffScreen(entities.get(i));
+                entities.remove(i);
+            }
+            else if (entities.get(i).isRemoved()) entities.remove(i);
             else entities.get(i).update();
         }
         for (int i = projectiles.size()-1 ; i >= 0; i--)
@@ -458,21 +494,21 @@ public class Level
         }
     }
     
-    public void removeEntities()
-    {
-        for (int i = 0; i < entities.size(); i++)
-        {
-            if(entities.get(i).isRemoved()) entities.remove(i);
-        }
-        for (int i = 0; i < projectiles.size(); i++)
-        {
-            if(projectiles.get(i).isRemoved()) projectiles.remove(i);
-        }
-        for (int i = 0; i < particles.size(); i++)
-        {
-            if(particles.get(i).isRemoved()) particles.remove(i);
-        }
-    }
+//    public void removeEntities()
+//    {
+//        for (int i = 0; i < entities.size(); i++)
+//        {
+//            if(entities.get(i).isRemoved()) entities.remove(i);
+//        }
+//        for (int i = 0; i < projectiles.size(); i++)
+//        {
+//            if(projectiles.get(i).isRemoved()) projectiles.remove(i);
+//        }
+//        for (int i = 0; i < particles.size(); i++)
+//        {
+//            if(particles.get(i).isRemoved()) particles.remove(i);
+//        }
+//    }
     
     public void updateOffScreenEntities()
     {
@@ -543,6 +579,23 @@ public class Level
     {
         return height;
     }
+
+    public List<Entity> getEntities()
+    {
+        return entities;
+    }
+
+    public List<Projectile> getProjectiles()
+    {
+        return projectiles;
+    }
+
+    public List<Entity> getOffScreenEntities()
+    {
+        return offScreenEntities;
+    }
+    
+    
     
     
 }

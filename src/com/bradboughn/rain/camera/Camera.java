@@ -93,8 +93,8 @@ public class Camera
 //                if (offsetY > player.getY() - Camera.height/2 && ytick > 30) offsetY--;
 //            } else ytick = 0;
 //        }
-            offsetX = player.getX() - (Camera.width>>1);
-            offsetY = player.getY() - (Camera.height>>1);
+            offsetX = (int)player.getX() - (Camera.width>>1);
+            offsetY = (int)player.getY() - (Camera.height>>1);
 
          
             
@@ -103,7 +103,9 @@ public class Camera
     
     public static void update()
     {
+
         updateStartEndColRow();
+        
     }
    
     public static void render()

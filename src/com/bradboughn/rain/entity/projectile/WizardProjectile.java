@@ -13,7 +13,7 @@ public class WizardProjectile extends Projectile
 
     public static int FIRE_RATE = 10;
     
-    public WizardProjectile(int x, int y, double slope) 
+    public WizardProjectile(double x, double y, double slope) 
     {
         super(x, y, slope);
         this.x = x - getSprite().WIDTH/2;

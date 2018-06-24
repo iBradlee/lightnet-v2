@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.bradboughn.rain.level.tile;
+package com.bradboughn.rain.entity.tile;
 
 import com.bradboughn.rain.graphics.Screen;
 import com.bradboughn.rain.graphics.Sprite;
@@ -12,20 +12,24 @@ import com.bradboughn.rain.graphics.Sprite;
  *
  * @author Brad
  */
-public class VoidTile extends Tile {
+public class RockTile extends Tile {
 
-    public VoidTile(Sprite sprite) {
+    public RockTile(Sprite sprite) {
         super(sprite);
     }
     
-    public VoidTile(Sprite sprite, int x, int y) {
+    public RockTile(Sprite sprite, int x, int y) {
         super(sprite, x, y);
     }
     
-    public VoidTile()
+    public RockTile()
     {
-        sprite = Sprite.VOID_SPRITE;
+        sprite = Sprite.SPAWN_GRASS_ROCK;
     }
     
-
+    public boolean isSolid() {
+        return true;
+    }
+    
+    
 }

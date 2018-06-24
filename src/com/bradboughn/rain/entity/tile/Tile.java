@@ -1,19 +1,17 @@
 
-package com.bradboughn.rain.level.tile;
+package com.bradboughn.rain.entity.tile;
 
 import com.bradboughn.rain.collision.AABB;
+import com.bradboughn.rain.entity.StaticEntity;
 import com.bradboughn.rain.graphics.Screen;
 import com.bradboughn.rain.graphics.Sprite;
-import com.bradboughn.rain.level.tile.spawn_level.SpawnGrassTile;
-import com.bradboughn.rain.level.tile.spawn_level.SpawnWaterTile;
+import com.bradboughn.rain.entity.tile.spawn_level.SpawnGrassTile;
+import com.bradboughn.rain.entity.tile.spawn_level.SpawnWaterTile;
+import static javax.swing.text.html.HTML.Attribute.ID;
 
-public class Tile 
+public class Tile extends StaticEntity
 {
- 
-    //@todo need to implement TILE_SIZE into spritesheet, i think? and/or sprite?
     public static final int TILE_SIZE = 16;
-    protected int x, y;
-    protected Sprite sprite;
     protected AABB aabb;
 
     
@@ -54,6 +52,7 @@ public class Tile
         this.sprite = sprite;
         this.x = x;
         this.y = y;
+        aabb = new AABB(x, y, Tile.TILE_SIZE, Tile.TILE_SIZE, this);
     }
     
     public Tile()
@@ -61,9 +60,9 @@ public class Tile
         
     }
     
-    public void render(int x, int y) 
+    public void render(double x, double y) 
     {
-        Screen.renderSprite(x << 4, y << 4, sprite, true);
+        Screen.renderSprite((int)x << 4, (int)y << 4, sprite, true);
     }
     
     public boolean isSolid() 
@@ -76,12 +75,12 @@ public class Tile
         return false;
     }
 
-    public int getX()
+    public double getX()
     {
         return x;
     }
 
-    public int getY()
+    public double getY()
     {
         return y;
     }

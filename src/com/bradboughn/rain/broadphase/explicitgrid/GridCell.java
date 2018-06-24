@@ -10,7 +10,8 @@ public class GridCell
 {
     private String value = "default"; 
     private CellCoord cellCoord;
-    public DoublyLinkedList<Entity> inhabitants = new DoublyLinkedList();
+    //may want to change back to a DoublyLinkedList, bc it will be added to so often? idk
+    public List<Entity> inhabitants = new ArrayList();
     
     //storage for neighboring cells
     private GridCell nTop;
@@ -27,12 +28,16 @@ public class GridCell
     public GridCell(CellCoord cellCoord)
     {
         this.cellCoord = cellCoord;
-        value = "x:" + getX() + ", y:" + getY();
     }
     
     public GridCell(int x, int y)
     {
         this.cellCoord = new CellCoord(x,y);
+    }
+    
+    public boolean isEmpty()
+    {
+        return inhabitants.isEmpty();
     }
     
     public void addToInhabitants(Entity e)

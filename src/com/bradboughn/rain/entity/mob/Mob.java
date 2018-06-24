@@ -1,20 +1,21 @@
 
 package com.bradboughn.rain.entity.mob;
 
+import static com.bradboughn.rain.broadphase.explicitgrid.Grid.level;
 import com.bradboughn.rain.collision.AABB;
+import com.bradboughn.rain.entity.DynamicEntity;
 import com.bradboughn.rain.entity.Entity;
 import com.bradboughn.rain.entity.projectile.Projectile;
 import com.bradboughn.rain.entity.projectile.WizardProjectile;
 import com.bradboughn.rain.graphics.AnimatedSprite;
-import com.bradboughn.rain.graphics.Sprite;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Mob extends Entity 
+public abstract class Mob extends DynamicEntity 
 {
     {
         type = Entity.Type.MOB;
-        ID = IDcounter++;
+        value = "mob";
     }
     
     protected boolean walking = false;
@@ -28,7 +29,12 @@ public abstract class Mob extends Entity
     protected AnimatedSprite anim_right;
     protected AnimatedSprite anim_down;
     protected AnimatedSprite anim_left;
-    
+
+    public Mob(double x, double y)
+    {
+        super(x, y);
+    }
+
     protected enum Direction 
     {
         UP, DOWN, LEFT, RIGHT
@@ -130,7 +136,7 @@ public abstract class Mob extends Entity
 //    }
     
         //should be "addProjectiles()" I thinks
-    public void shoot(int x, int y, double slope)
+    public void shoot(double x, double y, double slope)
     {
         Projectile p = new WizardProjectile(x, y, slope);
         

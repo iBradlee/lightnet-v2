@@ -8,28 +8,29 @@ import com.bradboughn.rain.camera.Camera;
 import com.bradboughn.rain.collision.AABB;
 import com.bradboughn.rain.graphics.Sprite;
 import com.bradboughn.rain.level.Level;
-import com.bradboughn.rain.util.DoublyLinkedList;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public abstract class Entity 
 {
     protected int ID;
-    protected static int IDcounter = 0;
+    public String value = "defualt";
     
-    protected int x, y;
-    protected int centerX, centerY;
-    private boolean removed = false;
-    private boolean offScreen = false;
+    protected double x, y;
+    protected double centerX, centerY;
     protected Level level;
     protected Random rand = new Random();
     protected AABB aabb;
-    private Sprite sprite;
+    protected Sprite sprite;
     //Generic HalfWidth/Height set to 16, for ease of use
     protected int sprHalfWidth = -1, sprHalfHeight = -1;
     
-    protected DoublyLinkedList<GridCell> occupiedCells = new DoublyLinkedList(); 
-    
-            
+    protected GridCell occupiedCell;
+    protected List<Integer> currentPairs = new ArrayList();
+         
+    protected boolean removed = false;
+    private boolean offScreen = false;
     
     public enum Type 
     {
@@ -48,16 +49,44 @@ public abstract class Entity
     
     protected void updateGridCells()
     {
-        
-        GridCell temp = getCellAtAbsolute(x, y);
+        GridCell temp = Grid.getCellAt(centerX, centerY);
         if (temp != null)
         {
-            occupiedCells.add(temp);
+            System.out.println("temp = " + temp.getX() + ", " + temp.getY());
+            occupiedCell = temp;
             temp.addToInhabitants(this);
             Grid.addToActiveCells(temp);
-
+        }
+        else 
+        {
+            System.out.println("not a cell here");
+            //because boradphase runs AFTER level's update of all entities, i need to remove this from level 
+            //entity list as well as add it into level offscreen list immediately
+            int camx = Camera.getOffsetX();
+            int camy = Camera.getOffsetY();
+            level.removeFromEntities(this);
+            level.addToOffScreen(this);
+            setRemovedTrue();
+            setOffScreenTrue();
         }
     }
+    
+    
+    
+    //pasted code from Dynamic starts here
+    
+    public void updateOffScreen()
+    {
+        //Just waiting to see if it's inside the broadphase grid again, to start updating normally
+        if (centerX < Camera.getOffsetX() - Grid.bufferSize_Pixel || centerX > Camera.getOffsetX() + Camera.getWidth() + Grid.bufferSize_Pixel) return;
+        if (centerY < Camera.getOffsetY() - Grid.bufferSize_Pixel || centerY > Camera.getOffsetY() + Camera.getHeight() + Grid.bufferSize_Pixel) return;
+        level.addToEntities(this);
+        level.removeFromOffScreen(this);
+        setOffScreenFalse();
+        setRemovedFalse();
+    }
+    
+    //pasted code from Dynamic ends here
     
     /**
      * Getting Grid cell at position relative to the map coordinates; meaning this method takes the camera offsets 
@@ -69,24 +98,6 @@ public abstract class Entity
      * @param y absolute y position on the map
      * @return 
      */
-    public GridCell getCellAtAbsolute(int x, int y)
-    {
-        int xa = x - Camera.getOffsetX();
-        int ya = y - Camera.getOffsetY();
-        if (xa < -Grid.getBufferSizePixel() || xa > Grid.gridWidth + Grid.bufferSize_Pixel || 
-            ya < -Grid.bufferSize_Pixel || ya > Grid.gridHeight + Grid.bufferSize_Pixel) 
-        {
-            System.out.println("Outside of explicit grid! Will be added to off-screen entity list!");
-            //need to build in better functionality for handling off-screen entities. this crashes atm,
-            //but I like the concept of a seperate custom class used as a container for these objects,
-            //to be added back into update/rendering loops when/if they come back onscreen again!
-            setOffScreenTrue();
-            setRemovedTrue();
-            level.addToOffScreen(this);
-            return null;
-        }
-        return Grid.cellMap.get(new CellCoord(xa/Grid.cellSize,ya/Grid.cellSize));
-    }
     
     public void runBroadPhase()
     {
@@ -98,37 +109,30 @@ public abstract class Entity
         
     }
     
-    public void updateOffScreen()
-    {
-        System.out.println("off screen update running");
-        //Just waiting to see if it's inside the broadphase grid again, to start updating normally
-        if (x < Camera.getOffsetX() - Grid.bufferSize_Pixel || x > Camera.getOffsetX() + Camera.getWidth() + Grid.bufferSize_Pixel) return;
-        if (y < Camera.getOffsetY() - Grid.bufferSize_Pixel || y > Camera.getOffsetY() + Camera.getHeight() + Grid.bufferSize_Pixel) return;
-        System.out.println("ENTITY RETURNING TO REGULAR ENTITY LIST!");
-        setOffScreenFalse();
-        setRemovedFalse();
-        level.add(this);
-    }
-    
     public void render () 
     {
         
     }
     
+    public boolean isRemoved() 
+    {
+        return removed;
+    }
+    
+    public boolean isOffScreen()
+    {
+        return offScreen;
+    }
+    
     public void setRemovedTrue () 
     {
-        //Remove from level
+        //Remove from level's Entity list, which updates/renders/etc.
         removed = true;
     }
     
     public void setRemovedFalse()
     {
         removed = false;
-    }
-    
-    public boolean isRemoved() 
-    {
-        return removed;
     }
     
     public void setOffScreenTrue()
@@ -141,22 +145,32 @@ public abstract class Entity
         offScreen = false;
     }
     
-    public boolean isOffScreen()
+    public boolean compareIDs(Entity e)
     {
-        return offScreen;
+        return ID == e.ID;
+    }
+    
+    public boolean checkCurrentPairsForID(int eID)
+    {
+        for (Integer id : currentPairs)
+        {
+            if (id == eID) return true;
+        }
+        return false;
     }
     
     public void init(Level level) 
     {
         this.level = level;
+        
     }
 
-    public int getX()
+    public double getX()
     {
         return x;
     }
 
-    public int getY()
+    public double getY()
     {
         return y;
     }
@@ -186,12 +200,12 @@ public abstract class Entity
         centerY = y + sprHalfHeight;
     }
 
-    public int getCenterX()
+    public double getCenterX()
     {
         return centerX;
     }
 
-    public int getCenterY()
+    public double getCenterY()
     {
         return centerY;
     }
@@ -229,6 +243,16 @@ public abstract class Entity
     public int getID()
     {
         return ID;
+    }
+
+    public GridCell getOccupiedCell()
+    {
+        return occupiedCell;
+    }
+    
+    public List<Integer> getCurrentPairs()
+    {
+        return currentPairs;
     }
     
     public boolean equals(Object o)

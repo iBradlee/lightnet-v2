@@ -3,30 +3,29 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.bradboughn.rain.level.tile.spawn_level;
+package com.bradboughn.rain.entity.tile;
 
+import com.bradboughn.rain.graphics.Screen;
 import com.bradboughn.rain.graphics.Sprite;
-import com.bradboughn.rain.level.tile.Tile;
 
 /**
  *
  * @author Brad
  */
-public class SpawnWaterTile extends Tile 
-{
-    
-    public SpawnWaterTile(Sprite sprite) 
-    {
+public class VoidTile extends Tile {
+
+    public VoidTile(Sprite sprite) {
         super(sprite);
     }
     
-    public SpawnWaterTile(Sprite sprite, int x, int y) {
+    public VoidTile(Sprite sprite, int x, int y) {
         super(sprite, x, y);
     }
     
-    public SpawnWaterTile()
+    public VoidTile()
     {
-        sprite = Sprite.SPAWN_WATER;
+        sprite = Sprite.VOID_SPRITE;
     }
     
+
 }

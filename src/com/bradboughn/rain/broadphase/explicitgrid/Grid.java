@@ -1,19 +1,27 @@
 
 package com.bradboughn.rain.broadphase.explicitgrid;
 
+import com.bradboughn.rain.Game;
+import com.bradboughn.rain.camera.Camera;
+import com.bradboughn.rain.entity.DynamicEntity;
 import com.bradboughn.rain.entity.Entity;
 import com.bradboughn.rain.level.Level;
-import com.bradboughn.rain.util.DoublyLinkedList;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Grid 
 {
     
-    public static int gridWidth, gridHeight, cellSize, bufferSize_Cell, bufferSize_Pixel;
-    public static int numVisibleRows, numVisibleColumns;
+    public static int gridWidth = Game.getWidth();
+    public static int gridHeight = Game.getHeight();
+    public static int cellSize = 32;
+    public static int bufferSize_Cell = 5;
+    public static int bufferSize_Pixel = bufferSize_Cell * cellSize;
+    public static int numVisibleRows = gridHeight/cellSize;
+    public static int numVisibleColumns = gridWidth/cellSize;
     public static Level level;
 
     //? Grid only needs to create/store in set/list, the cells that are currently being occupied, and disposing
@@ -25,7 +33,7 @@ public class Grid
     //Cells need method to check if more than one entity resides inside (Grid would call this, i think? to check if narrow phase needs to be ran)
     //Entity needs to use grid to look up what cell they're in, and store that info in a list
     public static Map<CellCoord, GridCell> cellMap = new LinkedHashMap();
-    private static DoublyLinkedList<GridCell> activeCells = new DoublyLinkedList();
+    private static List<GridCell> activeCells = new ArrayList();
     
     //THIS CELL IS FOR COORDINATES POINTING TO PLACES OFF-SCREEN FOR NOW. Could keep entities off-screen
     //in a cell such as this, or a new class that holds info of entities off-screen (thus not updated/rendered)
@@ -56,9 +64,14 @@ public class Grid
 //        numVisibleRows = screenHeight/cellSize;
 //        buildGrid();
 //    }
-    int i = 0;
     
-    public static void initGrid(int gridWidth, int gridHeight, int bufferSize, int cellSize)
+    public static void initGrid(Level level)
+    {
+        Grid.level = level;
+        buildGrid();   
+    }
+    
+    public static void initGridWithNewSize(int gridWidth, int gridHeight, int bufferSize, int cellSize)
     {
         Grid.gridWidth = gridWidth;
         Grid.gridHeight = gridHeight;
@@ -68,11 +81,6 @@ public class Grid
         numVisibleColumns = gridWidth/cellSize;
         numVisibleRows = gridHeight/cellSize;
         buildGrid();   
-        GridCell curr = cellMap.get(new CellCoord(0,0));
-        System.out.println("top left | " + curr.getnTopLeft().getValue());
-        System.out.println("top right | " + curr.getnTopRight().getValue());
-        System.out.println("bot left | " + curr.getnBotLeft().getValue());
-        System.out.println("bot right | " + curr.getnBotRight().getValue());
     }
     
     private static void buildGrid()
@@ -83,6 +91,7 @@ public class Grid
             {
                 CellCoord cc = new CellCoord(x,y);
                 GridCell gc = new GridCell(cc);
+               
                 cellMap.put(cc, gc);
             }
         }
@@ -92,7 +101,11 @@ public class Grid
     public static void update()
     {
 //        testPrintCellInhabitants();
-        
+
+    }
+    
+    public static void clear()
+    {
         clearActiveCellsOfInhabitants();
         clearActiveCells();
     }
@@ -289,9 +302,25 @@ public class Grid
         }
     }
     
+    public static boolean isInGridBounds(Entity e)
+    {
+        int xa = (int)e.getCenterX() - Camera.getOffsetX();
+        int ya = (int)e.getCenterY() - Camera.getOffsetY();
+        if (xa < -Grid.getBufferSizePixel() || xa > Grid.gridWidth + Grid.bufferSize_Pixel || 
+            ya < -Grid.bufferSize_Pixel || ya > Grid.gridHeight + Grid.bufferSize_Pixel) 
+        {
+            return false;
+        }
+        else return true;
+    }
+    
+    
     public static GridCell getCellAt(double x, double y)
     {
-        return cellMap.get(new CellCoord((int)x/cellSize,(int)y/cellSize));
+        int xa = (int)x - Camera.getOffsetX();
+        int ya = (int)y - Camera.getOffsetY();
+        System.out.println("x:"+x + ", y:" + y + "\nxa:" + xa + ", ya:" + ya);
+        return cellMap.get(new CellCoord(xa/cellSize,ya/cellSize));
     }
     
         public static int getGridWidth()

@@ -1,9 +1,7 @@
 
-package com.bradboughn.rain.level.tile;
+package com.bradboughn.rain.entity.tile;
 
 import com.bradboughn.rain.graphics.Sprite;
-import com.bradboughn.rain.level.Level;
-import com.bradboughn.rain.level.tile.spawn_level.SpawnGrassTile;
 
 public class TileMap
 {
@@ -17,44 +15,31 @@ public class TileMap
         this.width = width;
         this.height = height;
         map = new Tile[width][height];
-        loadMapDataImg(mapData);
-        
-        for (int y = 0; y < height; y++)
-        {
-            for (int x = 0; x < width; x++)
-            {
-//                map[x][y] 
-            }
-        }
-        
-        for (int y = 0; y < height; y++)
-        {
-            for (int x = 0; x < width; x++)
-            {
-                
-            }
-        }
+        populateTileMap(mapData);
     }
-    
-    private void loadMapDataImg(int[] mapData)
+    /**
+     * Populates the map with separate instances of Tile objects
+     * @param mapData int array holding RGB pixel data for each map
+     */
+    private void populateTileMap(int[] mapData)
     {
         for (int y = 0; y < height; y++)
         {
             for (int x = 0; x < width; x++)
             {
-                
+                map[x][y] = getNewTileFromRGB(x,y,mapData);
             }
         }
     }
     /**
      * Reads RGB pixel data from mapData image, determines what color corresponds to a specific Tile,
      * then returns a new instance of that tile, with proper x and y coordinates.
-     * @param x 
-     * @param y
-     * @param mapData
+     * @param x x tile coordinate
+     * @param y y tile coordinate
+     * @param mapData int array holding RGB pixel data for each map
      * @return 
      */
-    private Tile getNewTileFromColor(int x, int y, int[] mapData)
+    private Tile getNewTileFromRGB(int x, int y, int[] mapData)
     {
         if (x < 0 || y < 0 || x >= width || y >= height) return new WaterTile(Sprite.SPAWN_WATER, x, y);
         
@@ -80,4 +65,26 @@ public class TileMap
                 return new VoidTile(Sprite.VOID_SPRITE, x, y);
         }
     }
+
+    public Tile[][] getMap()
+    {
+        return map;
+    }
+    
+    public boolean isSolid(int x, int y)
+    {
+        return map[x][y].isSolid();
+    }
+
+    public int getWidth()
+    {
+        return width;
+    }
+
+    public int getHeight()
+    {
+        return height;
+    }
+    
+    
 }

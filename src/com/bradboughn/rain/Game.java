@@ -1,6 +1,7 @@
 
 package com.bradboughn.rain;
 
+import com.bradboughn.rain.broadphase.BroadPhase;
 import com.bradboughn.rain.broadphase.explicitgrid.Grid;
 import com.bradboughn.rain.camera.Camera;
 import com.bradboughn.rain.entity.mob.Player;
@@ -9,7 +10,7 @@ import com.bradboughn.rain.input.Keyboard;
 import com.bradboughn.rain.input.Mouse;
 import com.bradboughn.rain.level.Level;
 import com.bradboughn.rain.level.TileCoordinate;
-import com.bradboughn.rain.level.tile.TileMap;
+import com.bradboughn.rain.entity.tile.TileMap;
 import java.awt.Canvas;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -55,11 +56,11 @@ public class Game implements Runnable
         mouse = new Mouse();
         initInput();
         level = Level.spawn;
-        TileCoordinate playerSpawn = new TileCoordinate(23, 37);
+        TileCoordinate playerSpawn = new TileCoordinate(20, 20);
         player = new Player(playerSpawn.getX(),playerSpawn.getY());
-        Camera.init(WIDTH, HEIGHT, player.getX() - Camera.width/2, player.getY() - Camera.height/2, level, player);
+        Camera.init(WIDTH, HEIGHT, (int)player.getX() - Camera.width/2, (int)player.getY() - Camera.height/2, level, player);
         level.add(player);
-        Grid.initGrid(WIDTH, HEIGHT, 5, 32);
+        BroadPhase.init(level);
     }
     
     public synchronized void start() 
@@ -125,9 +126,9 @@ public class Game implements Runnable
     //make sure entity (player) isn't updated 2x per tick, as it would be if this was uncommented, bc it's updated in level
 //    player.update();
         level.update();
-        Grid.update();
         Camera.update();
-
+        BroadPhase.update();
+        Grid.clear();
     }
     
     public void render()
