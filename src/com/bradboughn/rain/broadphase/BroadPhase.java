@@ -1,14 +1,12 @@
 
 package com.bradboughn.rain.broadphase;
 
-import com.bradboughn.rain.broadphase.explicitgrid.CellCoord;
-import com.bradboughn.rain.broadphase.explicitgrid.Grid;
-import com.bradboughn.rain.broadphase.explicitgrid.GridCell;
+import com.bradboughn.rain.broadphase.implicitgrid.GridCell;
+import com.bradboughn.rain.camera.Camera;
 import com.bradboughn.rain.entity.Entity;
-import com.bradboughn.rain.entity.projectile.Projectile;
+import com.bradboughn.rain.graphics.gfxdebugtests.SpriteWithCoord;
 import com.bradboughn.rain.level.Level;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class BroadPhase 
@@ -51,7 +49,24 @@ public class BroadPhase
             GridCell gc = e.getOccupiedCell();
             
             //need to check initial cell a bit differently, making sure not to add itself as a pair
+            try
+            {
             checkOwnCellForEntities(gc, e);
+            }
+            catch (NullPointerException ex)
+            {
+                //THIS IS ALL TO CATCH A BUG THAT HAPPENS INFREQUENTLY, AND I DUNNO WHAT'S CAUSING IT!
+                ex.printStackTrace();
+                System.out.println("Entity which crashed " + e.value + ", ID: " + e.getID() + "@ position x:" + e.getCenterX() + ", y:" + e.getCenterY());
+                System.out.println("Camera offsets @ x:" + Camera.getOffsetX() + ", y:" + Camera.getOffsetY());
+                for (Entity ent : activeEntities)
+                {
+                    if (ent.value == "player")
+                    {
+                        System.out.println("Player @ x:" + ent.getCenterX() + ", y:" + ent.getCenterY());
+                    }
+                }
+            }
             checkCellForEntities(gc.getnTop(), e);
             checkCellForEntities(gc.getnBot(), e);
             checkCellForEntities(gc.getnLeft(), e);
@@ -71,6 +86,8 @@ public class BroadPhase
             GridCell gc = e.getOccupiedCell();
             
             //need to check initial cell a bit differently, making sure not to add itself as a pair
+//                    System.out.println("--START OF QUEUE--");
+
             checkOwnCellForEntities(gc, e);
             checkCellForEntities(gc.getnTop(), e);
             checkCellForEntities(gc.getnBot(), e);
@@ -80,6 +97,8 @@ public class BroadPhase
             checkCellForEntities(gc.getnTopRight(), e);
             checkCellForEntities(gc.getnBotLeft(), e);
             checkCellForEntities(gc.getnBotRight(), e);
+//                    System.out.println("--END OF QUEUE--");
+
         }
     }
     
@@ -89,7 +108,7 @@ public class BroadPhase
         //dynamic and static entities. moved some methods/variables around as I saw fit. something's broked!
         //to test what's causing this, I can go and put back each method/var (from Dynamic) one at a time, back into
         //the main entity class, and see where it starts wroking again, if it does.
-        if (gc.inhabitants.size() <= 1) return;
+        if (gc.getInhabitants().size() <= 1) return;
         //check for entities in list, while not checking entity itself
         queuePairsInOwnCell(gc, e);
     }
@@ -105,97 +124,63 @@ public class BroadPhase
     
     private static void queuePairs(GridCell gc, Entity e)
     {
-        //in here, could run a check to stop duplicate pairs from being added by doing so:
-        //each Entity has a unique ID number. Each Entity also has a linked list of Entity ID's that
-        //it is currently "paired" with, ie, this method has ran and said that they are potential colliders.
-        //before adding pair, do quick check through linked list of "calling" entity, to see if it is already
-        //paired with the ID from the Entity currently trying to be paired up. Could have ID's work like so:
-        //ID is a static int, shared by all "types" of entities, each time an object of that type is created,
-        //you increment the static int by 1. These ID's also have a modifier before them, using a 
-        //"letter to number" type of key, where A=1,B=2,etc., so an object of type "Ball" could have
-        //ID's such as : 0002001, 0002002, 0002003, etc. 
-        
-        for (int i = 0; i < gc.inhabitants.size(); i++)
+        for (int i = 0; i < gc.getInhabitants().size(); i++)
         {
-//            System.out.println(e.value + " into " + gc.inhabitants.get(i));
-            pairs.add(new Entity[]{e, gc.inhabitants.get(i)});
+                            addPairToTestRenderQueue(gc.getInhabitants().get(i));
+
+            Entity entityToPair = gc.getInhabitants().get(i);
+            if (e.checkCurrentIDPairsForID(entityToPair.getID())) continue;
+            e.addIDToCurrentIDPairs(entityToPair.getID());
+            entityToPair.addIDToCurrentIDPairs(e.getID());
+            pairs.add(new Entity[]{e, gc.getInhabitants().get(i)});
+//            if (e.value == "player")
+            {
+//                addPairToTestRenderQueue(entityToPair);
+            }
         }
     }
     
     private static void queuePairsInOwnCell(GridCell gc, Entity e)
     {
-        for (int i = 0; i < gc.inhabitants.size(); i++)
+        for (int i = 0; i < gc.getInhabitants().size(); i++)
         {
-            if (gc.inhabitants.get(i).equals(e)) continue;
-            pairs.add(new Entity[]{e, gc.inhabitants.get(i)});
+                                        addPairToTestRenderQueue(gc.getInhabitants().get(i));
+
+            Entity entityToPair = gc.getInhabitants().get(i);
+            if (entityToPair.equals(e)) continue;
+            else if (e.checkCurrentIDPairsForID(entityToPair.getID())) continue;
+            e.addIDToCurrentIDPairs(entityToPair.getID());
+            entityToPair.addIDToCurrentIDPairs(e.getID());
+            pairs.add(new Entity[]{e, entityToPair});
+//            if (e.value == "player")
+            {
+//                addPairToTestRenderQueue(entityToPair);
+            }
         }
     }
     
-    private static void findPairs()
+    private static void addPairToTestRenderQueue(Entity e)
     {
-        //Need to, ya know, first run the broad phase and find possible collisions, before sorting pairs...
-        //ahem... yeah, that'd be a good place to start
-        for (int i = 0; i < activeEntities.size(); i++)
-        {
-            Entity e = activeEntities.get(i);
-            GridCell gc = e.getOccupiedCell();
-            //I BELIVE I NEED TO CHANGE INHABITANTS TO AN ARRAYLIST, SO I CAN USE THE NESTED FOR LOOP,
-            //WITH MAIN LOOP ITERATOR AS "I", AND NESTED ITERATOR AS "I+1", SO I CAN SKIP THE PAIRS WHICH
-            //HAVE ALREADY BEEN PAIRED UP!
-            Iterator<Entity> itr = gc.inhabitants.iterator();
-            while(itr.hasNext())
-            {
-                Entity en = itr.next();
-                //make sure entity is not pairing against itself
-                if (en.equals(e)) continue;
-                else
-                {
-                    //add pair to pair list
-                    pairs.add(new Entity[]{e,en});
-                    //quick test check
-                    for (int pair = 0; pair < pairs.size(); pair++)
-                    {
-                        Entity[] entArr = pairs.get(pair);
-                        System.out.println(entArr[0].value);
-                        System.out.println(entArr[1].value);
-                        System.out.println("end of pair!\n");
-                    }
-                }
-                
-                
-            }
-
-            //check if cell has more than just this object inside
-//            if (gc.inhabitants.size() > 1)
-//            {
-//                Iterator<Entity> itr = gc.inhabitants.iterator();
-//                while (itr.hasNext())
-//                {
-//                    Entity entity = itr.next();
-//                    if (entity.equals(e)) continue;
-//                    
-//                    
-//                }
-//            }
-            
-            for (int cells = 0; cells < 9; cells++)
-            {
-                
-            }
-        }
-        counter = 0;
+        Camera.addSpriteToTestRenderQueue(new SpriteWithCoord(3, 3, 0xffff00c5,(int)e.getCenterX(), (int)e.getCenterY()));
     }
     
     private static void updateLists()
     {
+        //this is only for testing purposes; rendering visual box for specific Entity pairs
+        Camera.clearTestRenderQueue();
         for (Entity e : level.getEntities())
         {
+            //first clear current Entity's "currentIDPairs" list
+            e.clearAllCurrentIDPairs();
             activeEntities.add(e);
+            
         }
         
-        for (Entity e : level.getProjectiles())
+        for (Entity p : level.getProjectiles())
         {
-            activeProjectiles.add(e);
+            //first clear current Entity's "currentIDPairs" list
+            p.clearAllCurrentIDPairs();
+            activeProjectiles.add(p);
         }
     }
     
