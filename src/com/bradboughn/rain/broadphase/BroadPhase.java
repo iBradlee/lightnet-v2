@@ -4,7 +4,8 @@ package com.bradboughn.rain.broadphase;
 import com.bradboughn.rain.broadphase.implicitgrid.GridCell;
 import com.bradboughn.rain.camera.Camera;
 import com.bradboughn.rain.entity.Entity;
-import com.bradboughn.rain.graphics.gfxdebugtests.SpriteWithCoord;
+import com.bradboughn.rain.graphics.Sprite;
+import com.bradboughn.rain.util.debuggingtools.SpriteWithCoord;
 import com.bradboughn.rain.level.Level;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,24 +50,7 @@ public class BroadPhase
             GridCell gc = e.getOccupiedCell();
             
             //need to check initial cell a bit differently, making sure not to add itself as a pair
-            try
-            {
-            checkOwnCellForEntities(gc, e);
-            }
-            catch (NullPointerException ex)
-            {
-                //THIS IS ALL TO CATCH A BUG THAT HAPPENS INFREQUENTLY, AND I DUNNO WHAT'S CAUSING IT!
-                ex.printStackTrace();
-                System.out.println("Entity which crashed " + e.value + ", ID: " + e.getID() + "@ position x:" + e.getCenterX() + ", y:" + e.getCenterY());
-                System.out.println("Camera offsets @ x:" + Camera.getOffsetX() + ", y:" + Camera.getOffsetY());
-                for (Entity ent : activeEntities)
-                {
-                    if (ent.value == "player")
-                    {
-                        System.out.println("Player @ x:" + ent.getCenterX() + ", y:" + ent.getCenterY());
-                    }
-                }
-            }
+            checkOwnCellForEntities(gc, e);     
             checkCellForEntities(gc.getnTop(), e);
             checkCellForEntities(gc.getnBot(), e);
             checkCellForEntities(gc.getnLeft(), e);
@@ -84,9 +68,6 @@ public class BroadPhase
         {
             Entity e = activeProjectiles.get(i);
             GridCell gc = e.getOccupiedCell();
-            
-            //need to check initial cell a bit differently, making sure not to add itself as a pair
-//                    System.out.println("--START OF QUEUE--");
 
             checkOwnCellForEntities(gc, e);
             checkCellForEntities(gc.getnTop(), e);
@@ -97,25 +78,18 @@ public class BroadPhase
             checkCellForEntities(gc.getnTopRight(), e);
             checkCellForEntities(gc.getnBotLeft(), e);
             checkCellForEntities(gc.getnBotRight(), e);
-//                    System.out.println("--END OF QUEUE--");
-
         }
     }
     
     private static void checkOwnCellForEntities(GridCell gc, Entity e)
     {
-        //it's crashing here, when player runs this method. I just divided up Entity into two sub-classes,
-        //dynamic and static entities. moved some methods/variables around as I saw fit. something's broked!
-        //to test what's causing this, I can go and put back each method/var (from Dynamic) one at a time, back into
-        //the main entity class, and see where it starts wroking again, if it does.
         if (gc.getInhabitants().size() <= 1) return;
-        //check for entities in list, while not checking entity itself
         queuePairsInOwnCell(gc, e);
     }
     
     private static void checkCellForEntities(GridCell gc, Entity e)
     {
-        //need to account for border cells without certain neighbors
+//        need to account for border cells without certain neighbors
         if (gc == null) return;
         if (gc.isEmpty() == true) return;
         
@@ -126,8 +100,6 @@ public class BroadPhase
     {
         for (int i = 0; i < gc.getInhabitants().size(); i++)
         {
-                            addPairToTestRenderQueue(gc.getInhabitants().get(i));
-
             Entity entityToPair = gc.getInhabitants().get(i);
             if (e.checkCurrentIDPairsForID(entityToPair.getID())) continue;
             e.addIDToCurrentIDPairs(entityToPair.getID());
@@ -135,7 +107,7 @@ public class BroadPhase
             pairs.add(new Entity[]{e, gc.getInhabitants().get(i)});
 //            if (e.value == "player")
             {
-//                addPairToTestRenderQueue(entityToPair);
+                addPairToTestRenderQueue(entityToPair);
             }
         }
     }
@@ -144,8 +116,6 @@ public class BroadPhase
     {
         for (int i = 0; i < gc.getInhabitants().size(); i++)
         {
-                                        addPairToTestRenderQueue(gc.getInhabitants().get(i));
-
             Entity entityToPair = gc.getInhabitants().get(i);
             if (entityToPair.equals(e)) continue;
             else if (e.checkCurrentIDPairsForID(entityToPair.getID())) continue;
@@ -154,20 +124,18 @@ public class BroadPhase
             pairs.add(new Entity[]{e, entityToPair});
 //            if (e.value == "player")
             {
-//                addPairToTestRenderQueue(entityToPair);
+                addPairToTestRenderQueue(entityToPair);
             }
         }
     }
     
     private static void addPairToTestRenderQueue(Entity e)
     {
-        Camera.addSpriteToTestRenderQueue(new SpriteWithCoord(3, 3, 0xffff00c5,(int)e.getCenterX(), (int)e.getCenterY()));
+        Camera.addSpriteToTestRenderQueue(new SpriteWithCoord(3, 3, 0xffff00c5,(int)e.getCenterX()-1, (int)e.getCenterY()-1));
     }
     
     private static void updateLists()
     {
-        //this is only for testing purposes; rendering visual box for specific Entity pairs
-        Camera.clearTestRenderQueue();
         for (Entity e : level.getEntities())
         {
             //first clear current Entity's "currentIDPairs" list

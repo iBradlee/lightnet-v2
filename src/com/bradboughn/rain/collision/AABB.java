@@ -7,7 +7,7 @@ import com.bradboughn.rain.graphics.Sprite;
 
 public class AABB 
 {
-    private Entity go;
+    private Entity entity;
     
     private double x,y;
     private double centerX, centerY;
@@ -30,7 +30,7 @@ public class AABB
      */
     public AABB(double x, double y, int width, int height, Entity go)
     {
-        this.go = go;
+        this.entity = go;
         halfwidth = width >> 1;
         halfheight = height >> 1;
         
@@ -73,9 +73,20 @@ public class AABB
         bottomY = centerY + halfheight;
     }
     
+    public void update()
+    {
+        centerX = entity.getCenterX();
+        centerY = entity.getCenterY();
+    }
+    
+    public void render()
+    {
+        //rendering code, for a visual representation of an object's AABB
+    }
+    
     public void setAABBpos()
     {
-        setCenter( go.getCenterX(), go.getCenterY());
+        setCenter(entity.getCenterX(), entity.getCenterY());
         setSides();
     }
     
@@ -168,7 +179,7 @@ public class AABB
       
     public Entity getGo()
     {
-        return go;
+        return entity;
     }
     
 }

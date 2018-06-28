@@ -1,5 +1,5 @@
 
-package com.bradboughn.rain.broadphase.explicitgrid;
+package com.bradboughn.rain.broadphase.implicitgrid;
 
 import com.bradboughn.rain.entity.Entity;
 import com.bradboughn.rain.util.DoublyLinkedList;
@@ -11,7 +11,7 @@ public class GridCell
     private String value = "default"; 
     private CellCoord cellCoord;
     //may want to change back to a DoublyLinkedList, bc it will be added to so often? idk
-    public List<Entity> inhabitants = new ArrayList();
+    private List<Entity> inhabitants = new ArrayList();
     
     //storage for neighboring cells
     private GridCell nTop;
@@ -38,6 +38,11 @@ public class GridCell
     public boolean isEmpty()
     {
         return inhabitants.isEmpty();
+    }
+    
+    public List<Entity> getInhabitants()
+    {
+        return inhabitants;
     }
     
     public void addToInhabitants(Entity e)

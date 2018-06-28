@@ -84,7 +84,7 @@ public abstract class Projectile extends DynamicEntity
                 return;
             }
 
-            double[] collisionCheck = level.tileCollision(xx, yy, xa, ya, aabb);
+            double[] collisionCheck = level.tileCollision(centerX, centerY, xa, ya, aabb);
 
             updateXs(collisionCheck[1]);
             updateYs(collisionCheck[2]);

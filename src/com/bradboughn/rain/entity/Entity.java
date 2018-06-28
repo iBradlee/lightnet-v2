@@ -1,9 +1,9 @@
 
 package com.bradboughn.rain.entity;
 
-import com.bradboughn.rain.broadphase.explicitgrid.CellCoord;
-import com.bradboughn.rain.broadphase.explicitgrid.Grid;
-import com.bradboughn.rain.broadphase.explicitgrid.GridCell;
+import com.bradboughn.rain.broadphase.implicitgrid.CellCoord;
+import com.bradboughn.rain.broadphase.implicitgrid.Grid;
+import com.bradboughn.rain.broadphase.implicitgrid.GridCell;
 import com.bradboughn.rain.camera.Camera;
 import com.bradboughn.rain.collision.AABB;
 import com.bradboughn.rain.graphics.Sprite;
@@ -27,9 +27,9 @@ public abstract class Entity
     protected int sprHalfWidth = -1, sprHalfHeight = -1;
     
     protected GridCell occupiedCell;
-    protected List<Integer> currentPairs = new ArrayList();
+    protected List<Integer> currentIDPairs = new ArrayList();
          
-    protected boolean removed = false;
+    private boolean removed = false;
     private boolean offScreen = false;
     
     public enum Type 
@@ -60,10 +60,17 @@ public abstract class Entity
         {
             //because boradphase runs AFTER level's update of all entities, i need to remove this from level 
             //entity list as well as add it into level offscreen list immediately
-            level.removeFromEntities(this);
-            level.addToOffScreen(this);
-            setRemovedTrue();
-            setOffScreenTrue();
+            if (this.value == "projectile")
+            {
+                level.removeFromEntities(this);
+            }
+            else
+            {
+                level.removeFromEntities(this);
+                level.addToOffScreen(this);
+                setRemovedTrue();
+                setOffScreenTrue();
+            }
         }
     }
     
@@ -74,8 +81,8 @@ public abstract class Entity
     public void updateOffScreen()
     {
         //Just waiting to see if it's inside the broadphase grid again, to start updating normally
-        if (centerX < Camera.getOffsetX() - Grid.bufferSize_Pixel || centerX > Camera.getOffsetX() + Camera.getWidth() + Grid.bufferSize_Pixel) return;
-        if (centerY < Camera.getOffsetY() - Grid.bufferSize_Pixel || centerY > Camera.getOffsetY() + Camera.getHeight() + Grid.bufferSize_Pixel) return;
+        if (centerX < Camera.getOffsetX() - Grid.getBufferSizePixel() || centerX > Camera.getOffsetX() + Camera.getWidth() + Grid.getBufferSizePixel()) return;
+        if (centerY < Camera.getOffsetY() - Grid.getBufferSizePixel() || centerY > Camera.getOffsetY() + Camera.getHeight() + Grid.getBufferSizePixel()) return;
         level.addToEntities(this);
         level.removeFromOffScreen(this);
         setOffScreenFalse();
@@ -146,9 +153,19 @@ public abstract class Entity
         return ID == e.ID;
     }
     
-    public boolean checkCurrentPairsForID(int eID)
+    public void addIDToCurrentIDPairs(int eID)
     {
-        for (Integer id : currentPairs)
+        currentIDPairs.add(eID);
+    }
+    
+    public void clearAllCurrentIDPairs()
+    {
+        currentIDPairs.clear();
+    }
+    
+    public boolean checkCurrentIDPairsForID(int eID)
+    {
+        for (Integer id : currentIDPairs)
         {
             if (id == eID) return true;
         }
@@ -175,6 +192,7 @@ public abstract class Entity
     {
         x += xa;
         centerX = x + sprHalfWidth;
+        aabb.setCenter(centerX, centerY);
     }
     
     protected void updateYs(int ya)
@@ -248,7 +266,7 @@ public abstract class Entity
     
     public List<Integer> getCurrentPairs()
     {
-        return currentPairs;
+        return currentIDPairs;
     }
     
     public boolean equals(Object o)

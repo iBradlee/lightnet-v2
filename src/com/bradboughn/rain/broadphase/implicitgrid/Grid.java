@@ -1,5 +1,5 @@
 
-package com.bradboughn.rain.broadphase.explicitgrid;
+package com.bradboughn.rain.broadphase.implicitgrid;
 
 import com.bradboughn.rain.Game;
 import com.bradboughn.rain.camera.Camera;
@@ -15,14 +15,14 @@ import java.util.Map;
 public class Grid 
 {
     
-    public static int gridWidth = Game.getWidth();
-    public static int gridHeight = Game.getHeight();
-    public static int cellSize = 32;
-    public static int bufferSize_Cell = 5;
-    public static int bufferSize_Pixel = bufferSize_Cell * cellSize;
-    public static int numVisibleRows = gridHeight/cellSize;
-    public static int numVisibleColumns = gridWidth/cellSize;
-    public static Level level;
+    private static int width = Game.getWidth();
+    private static int height = Game.getHeight();
+    private static int cellSize = 20;
+    private static int bufferSize_Cell = 5;
+    private static int bufferSize_Pixel = bufferSize_Cell * cellSize;
+    private static int numVisibleRows = height/cellSize;
+    private static int numVisibleColumns = width/cellSize;
+    private static Level level;
 
     //? Grid only needs to create/store in set/list, the cells that are currently being occupied, and disposing
     //of entire set/list after each tick. Entity could move
@@ -73,8 +73,8 @@ public class Grid
     
     public static void initGridWithNewSize(int gridWidth, int gridHeight, int bufferSize, int cellSize)
     {
-        Grid.gridWidth = gridWidth;
-        Grid.gridHeight = gridHeight;
+        Grid.width = gridWidth;
+        Grid.height = gridHeight;
         Grid.cellSize = cellSize;
         Grid.bufferSize_Cell = bufferSize;
         Grid.bufferSize_Pixel = bufferSize * cellSize;
@@ -154,11 +154,11 @@ public class Grid
             for (int x = -bufferSize_Cell; x < numVisibleColumns + bufferSize_Cell; x++)
             {
                 CellCoord cc = new CellCoord(x,y);
-                if (cellMap.get(cc).inhabitants.isEmpty()) continue;
+                if (cellMap.get(cc).getInhabitants().isEmpty()) continue;
                 else
                 {
                     System.out.println("Cell @ x" + cc.getX() + ", y" + cc.getY());
-                    Iterator<Entity> itr = cellMap.get(cc).inhabitants.iterator();
+                    Iterator<Entity> itr = cellMap.get(cc).getInhabitants().iterator();
                     while (itr.hasNext())
                     {
                         System.out.println(itr.next().getType().toString());
@@ -306,8 +306,8 @@ public class Grid
     {
         int xa = (int)e.getCenterX() - Camera.getOffsetX();
         int ya = (int)e.getCenterY() - Camera.getOffsetY();
-        if (xa < -Grid.getBufferSizePixel() || xa > Grid.gridWidth + Grid.bufferSize_Pixel || 
-            ya < -Grid.bufferSize_Pixel || ya > Grid.gridHeight + Grid.bufferSize_Pixel) 
+        if (xa < -Grid.getBufferSizePixel() || xa > Grid.width + Grid.bufferSize_Pixel || 
+            ya < -Grid.bufferSize_Pixel || ya > Grid.height + Grid.bufferSize_Pixel) 
         {
             return false;
         }
@@ -322,14 +322,14 @@ public class Grid
         return cellMap.get(new CellCoord(xa/cellSize,ya/cellSize));
     }
     
-        public static int getGridWidth()
+        public static int getWidth()
     {
-        return gridWidth;
+        return width;
     }
 
-    public static int getGridHeight()
+    public static int getHeight()
     {
-        return gridHeight;
+        return height;
     }
 
     public static int getCellSize()
@@ -337,6 +337,28 @@ public class Grid
         return cellSize;
     }
 
+    public static int getBufferSize_Cell()
+    {
+        return bufferSize_Cell;
+    }
+
+    public static int getBufferSize_Pixel()
+    {
+        return bufferSize_Pixel;
+    }
+
+    public static int getNumVisibleRows()
+    {
+        return numVisibleRows;
+    }
+
+    public static int getNumVisibleColumns()
+    {
+        return numVisibleColumns;
+    }
+
+    
+    
     public static int getBufferSizePixel()
     {
         return bufferSize_Pixel;

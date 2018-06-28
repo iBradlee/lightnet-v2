@@ -5,7 +5,7 @@ import com.bradboughn.rain.collision.AABB;
 import com.bradboughn.rain.entity.mob.Player;
 import com.bradboughn.rain.graphics.Sprite;
 import com.bradboughn.rain.graphics.SpriteSheet;
-import com.bradboughn.rain.input.Mouse;
+import com.bradboughn.rain.util.debuggingtools.SpriteWithCoord;
 import com.bradboughn.rain.level.Level;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +25,7 @@ public class Camera
     private static Level level;
     private static Player player;
     
-    private static AABB visAABB;
-    public static List<AABB> aabbQue = new ArrayList();
+    public static List<SpriteWithCoord> testRenderQueue = new ArrayList();
     
     public static void init(int width, int height, int startX, int startY, Level level, Player player)
     {
@@ -41,9 +40,29 @@ public class Camera
         offsetY = startY - (height>>1);
     }
     
-    public static void setVisAABB(AABB a)
+    //testing functions only. for debugging/etc.
+    public static void addSpriteToTestRenderQueue(SpriteWithCoord spr)
     {
-        Camera.visAABB = a;
+        testRenderQueue.add(spr);
+    }
+    
+    public static void clearTestRenderQueue()
+    {
+        testRenderQueue.clear();
+    }
+    
+    //end of testing functions only. for debugging/etc.
+
+    public static void update()
+    {
+        clearTestRenderQueue();
+        updateOffsets();
+        updateStartEndColRow();
+    }
+   
+    public static void render()
+    {      
+        renderCamera();
     }
     
     public static void clear()
@@ -56,7 +75,6 @@ public class Camera
     
     public static void updateStartEndColRow()
     {
-        updateOffsets();
         //calculating viewport
         startCol = offsetX >> 4;
         endCol = (offsetX + width + 16) >> 4;
@@ -95,22 +113,6 @@ public class Camera
 //        }
             offsetX = (int)player.getX() - (Camera.width>>1);
             offsetY = (int)player.getY() - (Camera.height>>1);
-
-         
-            
-    
-    }
-    
-    public static void update()
-    {
-
-        updateStartEndColRow();
-        
-    }
-   
-    public static void render()
-    {      
-        renderCamera();
     }
     
     public static void renderCamera()
@@ -127,10 +129,13 @@ public class Camera
         level.renderEntities();
 //        renderSprite()
         
-        if (visAABB != null)
+        if (!(testRenderQueue.isEmpty()))
         {
-            visAABB.renderAABB();
-        } 
+            for (SpriteWithCoord spr : testRenderQueue)
+            {
+                spr.render();
+            }
+        }
     }
     
     public static void renderSprite(int xp, int yp, Sprite sprite, boolean pinToMap)
@@ -224,10 +229,10 @@ public class Camera
         return offsetX;
     }
 
-    public static void setOffsetX(int offsetX)
-    {
-        Camera.offsetX = offsetX;
-    }
+//    public static void setOffsetX(int offsetX)
+//    {
+//        Camera.offsetX = offsetX;
+//    }
 
     public static int[] getPixels()
     {

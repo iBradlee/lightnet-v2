@@ -8,6 +8,7 @@ import com.bradboughn.rain.graphics.Sprite;
 import com.bradboughn.rain.graphics.SpriteSheet;
 import com.bradboughn.rain.input.Keyboard;
 import com.bradboughn.rain.level.TileCoordinate;
+import com.sun.glass.events.KeyEvent;
 
 public class Dummy extends Mob {
     
@@ -34,17 +35,33 @@ public class Dummy extends Mob {
         
 //        speed = rand.nextInt(2) + 1;
         speed = 0;
-        value = "this is a fking dummy yo!";
+        value = "dummy";
     }
     
     int ticks = 0;
+    //temp var for toggling movement on and off
+    boolean toggle = false;
     public void update()
     {
         if (Keyboard.F1)
         {
             TileCoordinate tc = new TileCoordinate(14,34);
-            x = tc.getX();
-            y = tc.getY();
+            centerX = tc.getX();
+            centerY = tc.getY();
+        }
+        if (Keyboard.isKey(KeyEvent.VK_9))
+        {
+            //if toggle=false, it means it's not moving, so start moving, and set toggle to true
+            if (!toggle) 
+            {
+                speed = 1;
+                toggle = true;
+            }
+            else if (toggle)
+            {
+                speed = 0;
+                toggle = false;
+            }
         }
         time++;
         if (time % 60 == 0)
@@ -72,6 +89,7 @@ public class Dummy extends Mob {
     {
 //        Camera.renderSprite(aabb.getLeftX(), aabb.getTopY(), new Sprite(aabb.getHalfwidth()<<1, aabb.getHalfheight()<<1, 0xff0f0f0f), true);
         Camera.renderSprite((int)x, (int)y, getSprite(), true);
+        Camera.renderSprite((int)centerX, (int)centerY, new Sprite(1,1, 0xffffffff), true);
     }
 
 }

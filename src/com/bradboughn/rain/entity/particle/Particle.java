@@ -1,7 +1,6 @@
 
 package com.bradboughn.rain.entity.particle;
 
-import static com.bradboughn.rain.broadphase.explicitgrid.Grid.level;
 import com.bradboughn.rain.camera.Camera;
 import com.bradboughn.rain.collision.AABB;
 import com.bradboughn.rain.entity.DynamicEntity;
@@ -21,6 +20,7 @@ public class Particle extends DynamicEntity{
     {
         super(x,y);
         type = Type.PARTICLE;
+        value = "particle";
         this.life = rand.nextInt(5) + life;
         setSprite(new Sprite(rand.nextInt(4),rand.nextInt(4),0xffffff00)); 
         
@@ -47,17 +47,10 @@ public class Particle extends DynamicEntity{
         //negatively on the x axis. If so, start decrementing y to simulate upwards movement. Some of
         //these arbitrary numbers, used for the checks, can be semi-randomized allowing only a slight 
         //variation, to maintain some form of consistancy. 
-        
-        
-        
-        
-        
-        
+
         life--;
         if(life<=0) setRemovedTrue();
-        
 
-            
         if (!level.partTileCollision(x, y, xa, ya, aabb))
         {
             //za is simulating increase in gravity here

@@ -1,7 +1,6 @@
 
 package com.bradboughn.rain.entity.mob;
 
-import static com.bradboughn.rain.broadphase.explicitgrid.Grid.level;
 import com.bradboughn.rain.collision.AABB;
 import com.bradboughn.rain.entity.DynamicEntity;
 import com.bradboughn.rain.entity.Entity;

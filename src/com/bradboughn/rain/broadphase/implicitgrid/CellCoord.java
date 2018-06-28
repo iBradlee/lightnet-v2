@@ -1,5 +1,5 @@
 
-package com.bradboughn.rain.broadphase.explicitgrid;
+package com.bradboughn.rain.broadphase.implicitgrid;
 
 import com.bradboughn.rain.entity.Entity;
 import java.util.ArrayList;

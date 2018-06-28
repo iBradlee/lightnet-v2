@@ -1,7 +1,7 @@
 
 package com.bradboughn.rain.level;
 
-import com.bradboughn.rain.broadphase.explicitgrid.Grid;
+import com.bradboughn.rain.broadphase.implicitgrid.Grid;
 import com.bradboughn.rain.camera.Camera;
 import com.bradboughn.rain.collision.AABB;
 import com.bradboughn.rain.entity.DynamicEntity;
@@ -69,7 +69,7 @@ public class Level
     {
         if (Keyboard.isKey(KeyEvent.VK_0))
         {
-            add(new Dummy(20,27));
+            add(new Dummy(20<<4,27<<4));
         }
         updateOffScreenEntities();
         updateEntities();
@@ -212,7 +212,6 @@ public class Level
                         if (getTile(xCol, yRow).isSolid())
                         {
                             AABB tileAabb = new AABB(xCol*Tile.TILE_SIZE, yRow*Tile.TILE_SIZE, Tile.TILE_SIZE, Tile.TILE_SIZE);
-                            Camera.setVisAABB(tileAabb);
                             //SAME ISSUE AS Moving right on x axis. Without subtracting 1, it thinks
                             //it's bottom edge is inside the wall, more than likely because of the 
                             //fact that a 36x36 sprite has no true center point, and bc of that, the
@@ -264,7 +263,6 @@ public class Level
                         {
                             //create temp aabb for tile which is solid, and in our path
                             AABB tileAabb = new AABB(xCol*Tile.TILE_SIZE, yRow*Tile.TILE_SIZE, Tile.TILE_SIZE, Tile.TILE_SIZE);
-                            Camera.setVisAABB(tileAabb);
                             int deltaX = (int)(tileAabb.getRightX() - aabb.getLeftX());
                             //if difference between tile aabb's right side, and main aabb's left side
                             //is shorter than dx (our target movement), then store shortest distance
@@ -297,7 +295,6 @@ public class Level
                         if (getTile(xCol, yRow).isSolid()) 
                         {
                             AABB tileAabb = new AABB(xCol*Tile.TILE_SIZE, yRow*Tile.TILE_SIZE, Tile.TILE_SIZE, Tile.TILE_SIZE);
-                            Camera.setVisAABB(tileAabb);
                             //FOR SOME REASON, without taking away 1 pix from the right side (or tile left).
                             //it thinks i'm 1 pixel too far, and i get stuck in walls going right, and then
                             //trying to move up/down. PRETTY SURE it's the sprite not having an actual
@@ -329,7 +326,6 @@ public class Level
                         if (getTile(xCol, yRow).isSolid())
                         {
                             AABB tileAabb = new AABB(xCol*Tile.TILE_SIZE, yRow*Tile.TILE_SIZE, Tile.TILE_SIZE, Tile.TILE_SIZE);
-                            Camera.setVisAABB(tileAabb);
                             int deltaY = (int)(tileAabb.getBottomY() - aabb.getTopY());
                             
                             collisionDetectionResolution[0] = 1;
@@ -350,7 +346,6 @@ public class Level
                         if (getTile(xCol, yRow).isSolid())
                         {
                             AABB tileAabb = new AABB(xCol*Tile.TILE_SIZE, yRow*Tile.TILE_SIZE, Tile.TILE_SIZE, Tile.TILE_SIZE);
-                            Camera.setVisAABB(tileAabb);
                             //SAME ISSUE AS Moving right on x axis. Without subtracting 1, it thinks
                             //it's bottom edge is inside the wall, more than likely because of the 
                             //fact that a 36x36 sprite has no true center point, and bc of that, the
@@ -425,6 +420,15 @@ public class Level
         entities.add(e);
     }
     
+    public void addToParticles(Particle p)
+    {
+        p.init(this);
+        if (Grid.isInGridBounds(p))
+        {
+            particles.add(p);
+        }
+    }
+    
     public void addToOffScreen(Entity e)
     {
         offScreenEntities.add(e);
@@ -461,7 +465,10 @@ public class Level
                 entities.remove(i);
             }
             else if (entities.get(i).isRemoved()) entities.remove(i);
-            else entities.get(i).update();
+            else 
+            {
+                entities.get(i).update();
+            }
         }
         for (int i = projectiles.size()-1 ; i >= 0; i--)
         {
@@ -513,11 +520,11 @@ public class Level
         {
             e.render();
         }
-        for (Projectile p : projectiles)
+        for (Entity p : projectiles)
         {
             p.render();
         }
-        for (Particle p : particles)
+        for (Entity p : particles)
         {
             p.render();
         }

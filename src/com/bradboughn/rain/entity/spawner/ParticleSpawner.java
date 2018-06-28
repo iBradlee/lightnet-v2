@@ -16,7 +16,7 @@ public class ParticleSpawner extends Spawner
         for (int i = 0; i < amount; i++)
         {
             if (type == Type.PARTICLE_WIZ)
-                level.add(new Particle(x, y, life));
+                level.addToParticles(new Particle(x, y, life));
         }
 
     }

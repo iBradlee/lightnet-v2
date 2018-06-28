@@ -1,8 +1,8 @@
 
 package com.bradboughn.rain.entity.mob;
 
-import com.bradboughn.rain.broadphase.explicitgrid.Grid;
-import com.bradboughn.rain.broadphase.explicitgrid.GridCell;
+import com.bradboughn.rain.broadphase.implicitgrid.Grid;
+import com.bradboughn.rain.broadphase.implicitgrid.GridCell;
 import com.bradboughn.rain.camera.Camera;
 import com.bradboughn.rain.collision.AABB;
 import com.bradboughn.rain.entity.projectile.WizardProjectile;
@@ -76,19 +76,21 @@ public class Player extends Mob
             x = tc.getX();
             y = tc.getY();
         }
+        
+        if (Keyboard.isKey(KeyEvent.VK_F2))
+        {
+            System.out.println("PLAYER centerX: " + centerX + ", centerY: " + centerY);
+        }
+        
         //I'M NOT actually running multiple times per frame ATM
         recursiveUpdate();
         if (fireRate > 0) fireRate--;
         updateAnimation();
-//        clearProjectiles();
         updateShooting();
-//        updateProjectiles();
     }
     
     public void recursiveUpdate()
     {
-//        if (ticks < 3) 
-//        {
         int xa = 0, ya = 0;
         if (Keyboard.up) ya-= speed;
         if (Keyboard.down) ya+= speed;
@@ -109,9 +111,7 @@ public class Player extends Mob
 //        int xx = x - 16;
 //        int yy = y - 16;
         Camera.renderSprite((int)x, (int)y, getSprite(), true);
-        aabb.setAABBpos();
-        aabb.renderAABB();
-
+        Camera.renderSprite((int)centerX, (int)centerY, new Sprite(1,1, 0xff000000), true);
     }
     /**
      * Checks for correct input to shoot, at the start. Finds delta x, and delta y, between current
@@ -124,10 +124,10 @@ public class Player extends Mob
     {
         if (Mouse.isMouseL() && fireRate <=0)
         {
-            double dx = Mouse.getX() - (x + getSprite().WIDTH/2 - Camera.getOffsetX());
-            double dy = Mouse.getY() - (y + getSprite().HEIGHT/2 - Camera.getOffsetY());
+            double dx = Mouse.getX() - (centerX - Camera.getOffsetX());
+            double dy = Mouse.getY() - (centerY - Camera.getOffsetY());
             double slope = Math.atan2(dy, dx);
-            shoot(x + sprHalfWidth , y + sprHalfHeight, slope);
+            shoot(centerX , centerY, slope);
             fireRate = WizardProjectile.FIRE_RATE;
         }
         

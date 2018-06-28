@@ -16,6 +16,7 @@ public class WizardProjectile extends Projectile
     public WizardProjectile(double x, double y, double slope) 
     {
         super(x, y, slope);
+        value = "projectile";
         this.x = x - getSprite().WIDTH/2;
         this.y = y - getSprite().HEIGHT/2;
         speed = 8;

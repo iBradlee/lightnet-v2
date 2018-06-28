@@ -2,7 +2,7 @@
 package com.bradboughn.rain;
 
 import com.bradboughn.rain.broadphase.BroadPhase;
-import com.bradboughn.rain.broadphase.explicitgrid.Grid;
+import com.bradboughn.rain.broadphase.implicitgrid.Grid;
 import com.bradboughn.rain.camera.Camera;
 import com.bradboughn.rain.entity.mob.Player;
 import com.bradboughn.rain.graphics.Screen;
@@ -11,6 +11,7 @@ import com.bradboughn.rain.input.Mouse;
 import com.bradboughn.rain.level.Level;
 import com.bradboughn.rain.level.TileCoordinate;
 import com.bradboughn.rain.entity.tile.TileMap;
+import com.bradboughn.rain.util.debuggingtools.VisualImplicitGrid;
 import java.awt.Canvas;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -141,11 +142,8 @@ public class Game implements Runnable
         }
         Screen.clear(); // clear objects from screen, so previous pixels of moving objects are destroyed
         Camera.clear();
-//        int xScroll = player.getX() - Screen.getWidth()/2; //code to center player on screen
-//        int yScroll = player.getY() - Screen.getHeight()/2;
-//        level.render(xScroll, yScroll); // Render method from Level class, taking as parameters, xScroll and yScroll (x and y, from update method above, dictated by Keyboard class)
         Camera.render();
-//        player.render(screen);
+        VisualImplicitGrid.render();
 
         for (int i = 0; i < pixels.length; i++) 
         { // cycle thru all pixels in created window
